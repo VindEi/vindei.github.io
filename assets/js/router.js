@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
     "/projects/snapdns": ["/assets/js/projects.js"],
     "/echo": [
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js",
-      "/assets/js/echo.js"
+      "/assets/js/echo.js",
     ],
-    "/data": ["/assets/js/data.js"]
+    "/data": ["/assets/js/data.js"],
   };
 
   // Dynamic CSS Lazy Loading
@@ -39,8 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
     "/": [],
     "/projects": [],
     "/projects/snapdns": [],
-    "/echo": ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"],
-    "/data": []
+    "/echo": [
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css",
+    ],
+    "/data": [],
   };
 
   // Track Loaded Assets to Prevent Duplicates
@@ -60,12 +62,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = href;
-      
+
       // SECURITY FIX: Add integrity checks for external CDNs
       if (href.includes("cdnjs.cloudflare.com")) {
-        link.integrity = "sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==";
+        link.integrity =
+          "sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==";
         link.crossOrigin = "anonymous";
-        
+
         // RESILIENCY FIX: Pointed fallback style redirect to assets/leaflet/
         link.onerror = () => {
           link.onerror = null;
@@ -95,12 +98,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const script = document.createElement("script");
       script.src = src;
       script.defer = true;
-      
+
       // SECURITY FIX: Add integrity checks for external CDNs
       if (src.includes("cdnjs.cloudflare.com")) {
-        script.integrity = "sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==";
+        script.integrity =
+          "sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==";
         script.crossOrigin = "anonymous";
-        
+
         // RESILIENCY FIX: Pointed fallback script redirect to assets/leaflet/
         script.onerror = () => {
           script.onerror = null;
@@ -157,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.dispatchEvent(new Event("spa-content-loaded"));
       return;
     }
-    
+
     // Disable initial-load flag for all subsequent navigation
     isInitialRender = false;
 
@@ -175,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let content = rawHtml;
       let is404 = false; // Declared here so it's in scope for setTimeout
-      
+
       // Standalone parsing fallback for decoupled 404 views
       if (rawHtml.includes("bsod-container")) {
         const parser = new DOMParser();
@@ -190,21 +194,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Out-transition current content
       main.classList.remove("loaded");
-      
+
       setTimeout(async () => {
         // Reset scroll state to the top on every dynamic navigation
         window.scrollTo(0, 0);
 
-        // SYSTEM PLAN: Footer is hidden strictly on / and 404 to preserve
-        // a clean, spacious, standalone application workspace.
+        // 1. LAYOUT VISIBILITY SYSTEM (Hides footer on both Home and 404 pages)
         if (is404 || cleanPath === "/") {
-          if (header) header.style.display = is404 ? "none" : ""; 
-          if (footer) footer.style.display = "none";              
-          document.body.classList.remove("light-theme");
+          if (header) header.style.display = is404 ? "none" : "";
+          if (footer) footer.style.display = "none";
         } else {
           if (header) header.style.display = "";
           if (footer) footer.style.display = "";
-          
+        }
+
+        // 2. THEME PERSISTENCE SYSTEM (Completely split to prevent clashing)
+        if (is404) {
+          // 404 fatal console screen must always be dark green
+          document.body.classList.remove("light-theme");
+        } else {
+          // All valid routes (Home, Projects, etc.) must strictly respect user theme choice
           const savedTheme = localStorage.getItem("theme") || "dark";
           if (savedTheme === "light") {
             document.body.classList.add("light-theme");
@@ -214,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         main.innerHTML = content;
-        
+
         // Dynamically load stylesheets
         await Promise.all(stylesToLoad.map(loadStyle));
 
@@ -245,14 +254,17 @@ document.addEventListener("DOMContentLoaded", () => {
       !link.getAttribute("target")
     ) {
       const url = link.getAttribute("href");
-      
-      const path = url.split('#')[0];
-      let cleanPath = path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+
+      const path = url.split("#")[0];
+      let cleanPath =
+        path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
       if (cleanPath === "") cleanPath = "/";
 
-      // NAVIGATION FIX: If the user clicks a link to the page they are ALREADY on,
       // prevent default and return early (no re-fetching, no animation flashes).
-      if (cleanPath === window.location.pathname || (cleanPath === "/" && window.location.pathname === "/index.html")) {
+      if (
+        cleanPath === window.location.pathname ||
+        (cleanPath === "/" && window.location.pathname === "/index.html")
+      ) {
         e.preventDefault();
         return;
       }
