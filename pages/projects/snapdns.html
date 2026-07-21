@@ -1,0 +1,259 @@
+<section class="product-page">
+  <!-- BACK BUTTON -->
+  <div class="back-nav-container">
+    <a href="/projects" class="back-link hover-target">
+      <i class="fas fa-arrow-left"></i> Back to Projects
+    </a>
+  </div>
+
+  <!-- HERO SECTION -->
+  <div class="product-hero">
+    <div class="product-info">
+      <!-- TAGS -->
+      <div class="badge-row">
+        <span class="tag-pill license">Open Source</span>
+        <span class="tag-pill type">Software</span>
+        <span class="tag-pill platform">Crossplatform</span>
+      </div>
+
+      <div class="title-lockup">
+        <!-- LOGO IMAGE: Local /img/ path with automatic jsDelivr CDN backup redirection on load failure -->
+        <img
+          src="assets/img/SnapDns/SnapDns.png"
+          onerror="
+            this.onerror = null;
+            this.src =
+              'https://cdn.jsdelivr.net/gh/VindEi/SnapDNS@main/assets/SnapDns.png';
+          "
+          alt="SnapDNS Logo"
+          class="product-logo"
+          loading="lazy"
+          width="44"
+          height="44"
+        />
+        <h1>SnapDNS</h1>
+      </div>
+
+      <p class="lead">
+        A Cross-platform DNS manager. Consists of a Clean Flutter UI And a
+        high-performance C# .NET 10 service(Native Code on Android)
+      </p>
+
+      <div class="hero-actions">
+        <!-- Interactive trigger button -->
+        <a
+          id="dynamic-download-btn"
+          href="#"
+          class="btn-action primary hover-target"
+        >
+          Download <i class="fas fa-download"></i>
+        </a>
+
+        <!-- Repository Source Link -->
+        <a
+          href="https://github.com/VindEi/SnapDNS"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-action hover-target"
+        >
+          View Source <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- HERO VISUALS -->
+    <div
+      class="product-visual"
+      tabindex="0"
+      aria-label="Tap to switch between light and dark mode preview"
+    >
+      <!-- Dark Mode Image (Local path with jsDelivr CDN backup) -->
+      <div class="shot-wrapper front-shot">
+        <img
+          src="/assets/img/SnapDns/snapdns_main_dark.png"
+          onerror="
+            this.onerror = null;
+            this.src =
+              'https://cdn.jsdelivr.net/gh/VindEi/SnapDNS@main/assets/snapdns_main_dark.png';
+          "
+          class="app-screenshot"
+          alt="SnapDNS Dark Mode Interface"
+          loading="lazy"
+        />
+        <div class="screen-shine"></div>
+      </div>
+
+      <!-- Light Mode Image (Local path with jsDelivr CDN backup) -->
+      <div class="shot-wrapper back-shot">
+        <img
+          src="/assets/img/SnapDns/snapdns_main_light.png"
+          onerror="
+            this.onerror = null;
+            this.src =
+              'https://cdn.jsdelivr.net/gh/VindEi/SnapDNS@main/assets/snapdns_main_light.png';
+          "
+          class="app-screenshot"
+          alt="SnapDNS Light Mode Interface"
+          loading="lazy"
+        />
+        <div class="screen-shine"></div>
+      </div>
+
+      <!-- MOBILE TAP INDICATOR -->
+      <div class="mobile-hint">
+        <i class="fas fa-sync-alt"></i> Tap image to switch theme
+      </div>
+
+      <div class="glow-effect"></div>
+    </div>
+  </div>
+
+  <!-- FEATURES GRID -->
+  <div class="features-grid">
+    <div class="feature-card">
+      <i class="fas fa-microchip"></i>
+      <h3>Split-Process Architecture</h3>
+      <p>
+        The unprivileged user interface (Flutter) runs in user-space,
+        communicating via secure IPC (Named Pipes & Sockets) with a native
+        background system service (C# .NET 10).
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <i class="fas fa-mobile-screen-button"></i>
+      <h3>Cross-Platform Client</h3>
+      <p>
+        Unified management client designed for Windows, macOS, Linux, and
+        Android, giving you the same control on all your devices.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <i class="fas fa-lock"></i>
+      <h3>Encrypted DNS (DoH/DoT)</h3>
+      <p>
+        Configure, manage, and enforce secure DNS-over-HTTPS and DNS-over-TLS
+        protocols easily across all active network adapters.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <i class="fas fa-server"></i>
+      <h3>Preset & Custom Profiles</h3>
+      <p>
+        Swap between fast pre-configured servers (Cloudflare, Google, Quad9) or
+        construct your own custom DNS profiles with ease.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <i class="fas fa-heartbeat"></i>
+      <h3>Integrated Diagnostics</h3>
+      <p>
+        Features built-in tools like Latency Ping Check (to find the fastest
+        DNS), Flush DNS Cache directly inside the app.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <i class="fas fa-lock-open"></i>
+      <h3>Open & Transparent</h3>
+      <p>
+        Zero telemetry, fully open-source (GPLv3), and running entirely
+        client-side. Inspect the code and manage your connections with complete
+        peace of mind.
+      </p>
+    </div>
+  </div>
+
+  <!-- POPUP SELECTION MODAL -->
+  <div id="download-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Select Package</h2>
+        <button
+          id="close-modal-btn"
+          class="hover-target"
+          aria-label="Close modal"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content">
+        <!-- Windows Column -->
+        <div id="group-win" class="modal-group">
+          <h3><i class="fab fa-windows"></i> Windows 10/11</h3>
+          <div class="modal-options">
+            <a
+              href="https://github.com/VindEi/SnapDNS/releases/download/v2.0.0/SnapDns_Setup.exe"
+              class="modal-item hover-target"
+            >
+              <span class="title">Windows Installer (.exe)</span>
+              <span class="sub">Includes system daemon setup</span>
+            </a>
+            <a
+              href="https://github.com/VindEi/SnapDNS/releases/download/v2.0.0/SnapDNS_Windows_x64_Portable.zip"
+              class="modal-item hover-target"
+            >
+              <span class="title">Windows Portable (.zip)</span>
+              <span class="sub">Standard x64 archive</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Android Column -->
+        <div id="group-android" class="modal-group">
+          <h3><i class="fab fa-android"></i> Android Client</h3>
+          <div class="modal-options">
+            <a
+              href="https://github.com/VindEi/SnapDNS/releases/download/v2.0.0/SnapDNS_Android_arm64-v8a.apk"
+              class="modal-item hover-target"
+            >
+              <span class="title">Android APK (ARM64-v8a)</span>
+              <span class="sub">Modern mobile devices (Recommended)</span>
+            </a>
+            <a
+              href="https://github.com/VindEi/SnapDNS/releases/download/v2.0.0/SnapDNS_Android_armeabi-v7a.apk"
+              class="modal-item hover-target"
+            >
+              <span class="title">Android APK (armeabi-v7a)</span>
+              <span class="sub">Older mobile devices</span>
+            </a>
+            <a
+              href="https://github.com/VindEi/SnapDNS/releases/download/v2.0.0/SnapDNS_Android_x86_64.apk"
+              class="modal-item hover-target"
+            >
+              <span class="title">Android APK (x86_64)</span>
+              <span class="sub">Emulators / ChromeOS</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Unix Column -->
+        <div id="group-nix" class="modal-group">
+          <h3>
+            <i class="fab fa-apple"></i> / <i class="fab fa-linux"></i> Unix
+            Clients
+          </h3>
+          <div class="modal-options">
+            <a
+              href="https://github.com/VindEi/SnapDNS/releases/download/v2.0.0/SnapDNS_macOS_arm64.zip"
+              class="modal-item hover-target"
+            >
+              <span class="title">macOS Portable (.zip)</span>
+              <span class="sub">Apple Silicon (M1/M2/M3)</span>
+            </a>
+            <a
+              href="https://github.com/VindEi/SnapDNS/releases/download/v2.0.0/SnapDNS_Linux_x64.zip"
+              class="modal-item hover-target"
+            >
+              <span class="title">Linux Portable (.zip)</span>
+              <span class="sub">Standard x64 binary</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

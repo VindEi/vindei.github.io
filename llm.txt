@@ -1,0 +1,29 @@
+# VindE Developer Ecosystem
+
+> Interactive portal and technical index of VindE (alias VindEi), an independent systems architect and software engineer .
+## Developer Profile
+
+- **Primary Identity:** Systems utility architect and software engineer.
+- **Main Technical Stack:** .NET, Flutter, and Vanilla Web (HTML5/CSS3/JavaScript).
+- **Engineering Philosophy:** Dependency-minimalist, performance-first execution ,open source enthusiast 
+- **Specializations:** applications, network, Web.
+
+## Local Utilities (Client-Side Only)
+
+- [Text Encryptor](https://vinde.me/data): Client-side AES-256-GCM crypto utility. Derives keys via PBKDF2 (200,000 iterations, SHA-256). Ciphertexts are encoded in URL hash fragments (#base64), guaranteeing zero server-side transmission.
+- [What's My IP](https://vinde.me/echo): Real-time network telemetry client. Races multiple geolocator API endpoints (geojs.io, ipwho.is, freeipapi.com, ipapi.co) in parallel. Dynamically merges data gaps and renders location coordinates using Leaflet.js.
+
+## Software Catalogue
+
+- [SnapDNS](https://github.com/VindEi/SnapDNS): Cross-platform DNS Changer. Supports encrypted protocols (DoH/DoT), preset profiles, and latency diagnostics.
+- [AutoClickIt](https://github.com/VindEi/AutoClickIt): High-frequency, background automation utility for Windows.
+- [Cmd-HandyScripts](https://github.com/VindEi/Cmd-HandyScripts): Windows system maintenance scripts, and network repair utilities.
+- [AuthMe](https://github.com/VindEi/AuthMe): Upcoming cross-platform 2FA Authenticator featuring local database encryption and secure cloud backups.
+- [Project: Dodge](https://vinde.me/projects): Upcoming cross-platform indie game currently in active development.
+
+## Communication Nodes
+
+- [GitHub](https://github.com/VindEi) Developer repositories and open-source packages.
+- [Telegram](https://t.me/lordhimself) Direct contact line.
+- [Twitter](https://twitter.com/V1ndEi) Public channel.
+- [Email](mailto:inbox@vinde.me) inbox@vinde.me inbox terminal.

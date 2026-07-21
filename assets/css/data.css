@@ -1,0 +1,140 @@
+.Encrypt-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  margin-top: 1rem;
+  align-items: stretch;
+}
+
+.Encrypt-main-card,
+.Encrypt-side-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  padding: 1.5rem !important;
+  box-shadow: var(--shadow) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  transition:
+    border-color 0.1s ease-out,
+    background-color 0.1s ease-out !important;
+}
+
+/* --- CURSOR FIX --- */
+/* Force the browser to show the I-beam (text cursor) even though body is cursor:none */
+#data-input,
+#data-pass,
+#decrypt-pass,
+#Encrypt-result {
+  cursor: text !important;
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+.field-block label {
+  align-self: flex-start;
+  margin-bottom: 10px;
+}
+
+#data-input,
+#data-pass,
+#decrypt-pass,
+#Encrypt-result {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border-color);
+  color: var(--text);
+  padding: 15px;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  outline: none;
+}
+
+#data-input {
+  height: 220px;
+  resize: none;
+  line-height: 1.6;
+}
+
+.input-action-group {
+  display: flex;
+  gap: 10px;
+}
+.input-action-group input {
+  flex: 1;
+}
+
+.spec-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.spec-list li {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+  margin-bottom: 18px;
+}
+.spec-list li strong {
+  display: block;
+  font-family: "Oswald";
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.status-box {
+  text-align: center;
+  padding: 20px 0;
+}
+.Encrypt-pulse-icon {
+  font-size: 3.5rem;
+  color: var(--accent-gold);
+  opacity: 0.3;
+  margin-bottom: 15px;
+  animation: vPulse 3s infinite;
+}
+.status-box p {
+  font-family: "Oswald";
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+
+.Encrypt-plaintext-box {
+  background: var(--bg);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  white-space: pre-wrap;
+  word-break: break-all;
+  text-align: left;
+}
+.error-text {
+  color: var(--accent-red);
+  font-family: "Oswald";
+  font-size: 0.8rem;
+}
+
+@keyframes vPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.4;
+  }
+}
+@media (max-width: 900px) {
+  .Encrypt-grid {
+    grid-template-columns: 1fr;
+  }
+}

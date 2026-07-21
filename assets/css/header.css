@@ -1,0 +1,220 @@
+/* --- HEADER CONTAINER --- */
+header {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Dimensions */
+  width: 95%;
+  max-width: 900px;
+  padding: 10px 25px;
+
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  /* Glassmorphism */
+  border-radius: 50px;
+  background: rgba(20, 20, 22, 0.7);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+body.light-theme header {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* --- LEFT SECTION (Logo) --- */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.header-left img.logo {
+  height: 32px;
+  width: auto;
+  display: block;
+  transform: scale(1.5);
+  margin-right: 8px;
+  margin-left: 5px;
+  filter: drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.8));
+}
+
+body.light-theme .header-left img.logo {
+  filter: none;
+}
+
+.header-left h1 {
+  font-family: "Oswald", sans-serif;
+  color: var(--accent-gold);
+  font-size: 1.4rem;
+  margin: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* --- NAVIGATION --- */
+.header-nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.header-nav a {
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  color: var(--text);
+  opacity: 0.6;
+  position: relative;
+
+  /* Layout for Icon + Text */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
+
+  transition: all 0.3s;
+
+  /* Cursor & Click Area */
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+/* Icon Styling (Desktop) */
+.header-nav a i {
+  font-size: 1rem;
+  margin-bottom: 2px; /* Visual alignment fix */
+}
+
+body.light-theme .header-nav a {
+  color: #000;
+  opacity: 0.7;
+}
+
+.header-nav a:hover {
+  opacity: 1;
+  color: var(--text);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme .header-nav a:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Active State */
+.header-nav a.active {
+  opacity: 1;
+  color: var(--accent-gold) !important;
+}
+
+.header-nav a.active::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: var(--accent-gold);
+  box-shadow: 0 0 8px var(--accent-gold);
+}
+
+/* --- THEME TOGGLE --- */
+#theme-toggle {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.8;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition:
+    color 0.3s,
+    transform 0.2s;
+  border-radius: 50%;
+}
+
+#theme-toggle:hover {
+  opacity: 1;
+  color: var(--accent-gold);
+  transform: rotate(15deg);
+}
+
+/* --- RESPONSIVE (MOBILE) --- */
+@media (max-width: 768px) {
+  header {
+    width: 92%;
+    top: 15px;
+    padding: 8px 15px;
+  }
+
+  .header-left {
+    gap: 8px;
+  }
+
+  .header-left img.logo {
+    height: 28px;
+    transform: scale(1.2);
+  }
+
+  .header-left h1 {
+    display: none;
+  }
+
+  /* Centered Nav on Mobile */
+  .header-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 1.5rem;
+    margin: 0;
+  }
+
+  /* Hide Text on Mobile */
+  .header-nav a span {
+    display: none;
+  }
+
+  /* Ensure Icon is visible and larger on Mobile */
+  .header-nav a i {
+    display: block;
+    font-size: 1.3rem;
+    margin-bottom: 0;
+  }
+
+  /* Circle buttons on mobile */
+  .header-nav a {
+    padding: 8px;
+    border-radius: 50%;
+    gap: 0;
+  }
+
+  .header-nav a.active::after {
+    bottom: 2px;
+    left: 20%;
+    right: 20%;
+  }
+}

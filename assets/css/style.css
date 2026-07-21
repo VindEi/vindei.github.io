@@ -1,0 +1,581 @@
+/**
+ * VindE - Global Stylesheet
+ * 
+ * Features:
+ * 1. Dual-theme support with optimized variable mapping.
+ * 2. Performance-first font stacks to eliminate layout thrashing.
+ * 3. Component-specific transitions for a premium UI feel.
+ */
+
+/* ==========================================================================
+   1. VARIABLES & THEMES
+   ========================================================================== */
+
+:root {
+  /* THE HIGH-FIDELITY APP SYSTEM */
+  --bg: #07080a;             /* Pure deep dark canvas */
+  --surface: #0c0d12;        /* Opaque, highly structured slate-black */
+  --text: #ffffff;           /* Stark off-white */
+  --text-dim: #717380;       /* Muted neutral gray */
+  --accent-gold: #ffc107;    
+  --accent-red: #ff3b5c;
+  
+  /* Razor-thin card borders */
+  --border-color: rgba(255, 255, 255, 0.03);
+  
+  /* CRITICAL APPLICATIVE SPECULARITY:
+     Includes a microscopic 1px top-edge white bezel highlight (inset 0 1px 0) 
+     to simulate light catching on glass plates. */
+  --shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+body.light-theme {
+  /* LIGHT WORKSPACE SYSTEM (Visual Contrast Polish) */
+  --bg: #f4f5f8;
+  --surface: #e9ebf0;        /* Slightly darker slate to create distinct card-on-canvas contrast */
+  --text: #0d0e12;
+  --text-dim: #656775;
+  --accent-gold: #ffb300;
+  --accent-red: #e02443;
+  --border-color: rgba(0, 0, 0, 0.06);
+  --shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* LIGHT MODE COMPONENT OVERRIDE:
+   Fixes the muddy dark-gray background box on the right of the home dashboard in light mode */
+body.light-theme .dashboard-telemetry {
+  background: rgba(0, 0, 0, 0.015) !important;
+}
+
+/* ==========================================================================
+   LIGHT MODE COMPONENT OVERRIDES
+   ========================================================================== */
+
+/* 1. BUTTON CONTROLS:
+   Overrides hardcoded dark-slate button backgrounds, translating them 
+   to solid white with high-contrast text in light mode */
+body.light-theme .btn-action {
+  background: #ffffff !important;
+  color: #0e0e11 !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-theme .btn-action:hover {
+  background: var(--accent-gold) !important;
+  color: #08090d !important;
+  border-color: var(--accent-gold) !important;
+}
+
+body.light-theme .btn-action.primary {
+  background: var(--accent-gold) !important;
+  color: #08090d !important;
+  border-color: var(--accent-gold) !important;
+}
+
+body.light-theme .btn-action.primary:hover {
+  background: #e0a300 !important;
+  border-color: #e0a300 !important;
+}
+
+/* 2. GITHUB CONTRIBUTIONS SPECTRUM:
+   Overrides dark-theme slate commit squares, re-mapping them to 
+   the official, soft, light-theme Github color spectrum */
+body.light-theme .github-grid .git-sq.off { background: #ebedf0; }      /* Zero commits */
+body.light-theme .github-grid .git-sq.low { background: #9be9a8; }      /* 1-2 commits */
+body.light-theme .github-grid .git-sq.medium { background: #40c463; }   /* 3-4 commits */
+body.light-theme .github-grid .git-sq.high { background: #30a14e; }     /* 5-6 commits */
+body.light-theme .github-grid .git-sq.max { background: #216e39; }      /* 7+ commits */
+
+/* ==========================================================================
+   2. GLOBAL RESET & LAYOUT
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth !important;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Centralized transition logic for theme-sensitive components */
+header,
+footer,
+.feature-card,
+.project-card,
+.btn,
+.project-detail,
+.back-link,
+#theme-toggle {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* --- CUSTOM SCROLLBAR --- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold);
+}
+
+/* ==========================================================================
+   3. CONTAINERS & TRANSITIONS
+   ========================================================================== */
+
+#header-placeholder,
+#footer-placeholder {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Initialized via script.js upon successful fetch */
+body.loaded #header-placeholder,
+body.loaded #footer-placeholder {
+  opacity: 1;
+}
+
+#page-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  
+  padding: 120px 24px 20px;
+  
+  display: flex;
+  flex-direction: column;
+
+  /* Hidden state to manage FOUT and layout shifts during SPA navigation */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease,
+    visibility 0.4s;
+}
+
+#page-content.loaded {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   4. TYPOGRAPHY & UI
+   ========================================================================== */
+
+h1,
+h2,
+h3 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  letter-spacing: -0.04em; /* Ultra-tight app tracking */
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800; /* Distinct typographic scale */
+}
+
+body.light-theme h1 {
+  text-shadow: none;
+}
+body.light-theme h2,
+body.light-theme h3 {
+  color: #000;
+}
+
+a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: var(--accent-gold);
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  background: transparent;
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn:hover {
+  background: var(--accent-gold);
+  color: #000;
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+}
+
+/* Metadata, badges, and labels must be extremely sharp, lowercase, or monospace */
+.tag-pill {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px !important;
+  border-radius: 4px !important; /* Micro-rounded badges */
+  border: 1px solid var(--border-color) !important;
+}
+
+/* ==========================================================================
+   5. HOME PAGE CONTENT (Sleek Split-Screen Control Dashboard)
+   ========================================================================== */
+
+/* THE CONTROL CENTER FRAME */
+.home-dashboard {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-height: 60vh;
+  overflow: hidden;
+  position: relative;
+
+  margin-top: 100px; 
+
+  background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: 0 0;
+}
+
+/* --- LEFT SIDE: HERO PANEL --- */
+.dashboard-hero {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column; 
+  
+  justify-content: center; 
+  
+  border-right: 1px solid var(--border-color);
+  position: relative;
+}
+
+.hero-text-block {
+  width: 100%;
+}
+
+.dashboard-hero h1 {
+  font-size: 5.5rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--text);
+}
+
+.hero-subtitle {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-top: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.hero-desc {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  margin-top: 1.5rem;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+/* --- THE SIGNATURE (Placed tightly under your biography) --- */
+.hero-signature-row {
+  margin-top: 3rem; 
+  
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  opacity: 0;
+  animation: heroEnter 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.8s;
+}
+
+.signature-item {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  
+  display: inline-flex; 
+  align-items: center;
+  gap: 6px;
+  
+  cursor: default;
+}
+
+.signature-item i {
+  color: var(--accent-red);
+  font-size: 0.8rem;
+  animation: heartBreathe 1.2s infinite ease-in-out; /* Breathing red heart */
+}
+
+@keyframes heartBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes heartBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes heroEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- RIGHT SIDE: TELEMETRY CONSOLE --- */
+.dashboard-telemetry {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(10, 11, 15, 0.4);
+}
+
+.telemetry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+.status-pulse-dot {
+  width: 6px;
+  height: 6px;
+  background: #4caf50;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  animation: pulseGreen 2s infinite;
+}
+
+.uptime-percentage {
+  font-family: monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+/* --- GITHUB CONTRIBUTION TIMELINE --- */
+.github-grid {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.github-grid .git-sq {
+  flex: 1;
+  height: 10px;
+  border-radius: 1px;
+}
+
+.github-grid .git-sq.off { background: #161b22; }
+.github-grid .git-sq.low { background: #0e4429; }
+.github-grid .git-sq.medium { background: #006d32; }
+.github-grid .git-sq.high { background: #26a641; }
+.github-grid .git-sq.max { background: #39d353; }
+
+.metrics-separator {
+  height: 1px;
+  background: var(--border-color);
+  margin: 1.5rem 0;
+}
+
+/* --- SYSTEM HUB STRUCTURE --- */
+.telemetry-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-label {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: none;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+/* --- THE SYSTEM DIRECTORY LIST --- */
+.telemetry-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+a.telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--text-dim);
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  margin: 0 -12px;
+  transition:
+    color 0.15s ease-out,
+    border-color 0.15s ease-out,
+    background-color 0.15s ease-out;
+}
+
+a.telemetry-row:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.02);
+  border-color: var(--border-color);
+}
+
+a.telemetry-row:hover .value {
+  color: var(--accent-gold);
+}
+
+.telemetry-row .label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.telemetry-row .label i {
+  width: 14px;
+  text-align: center;
+}
+
+.telemetry-row .value {
+  font-family: monospace;
+  font-weight: 600;
+  transition: color 0.15s ease-out;
+}
+
+/* ==========================================================================
+   6. ANIMATION KEYFRAMES
+   ========================================================================== */
+
+@keyframes pulseGreen {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes heartBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes heroEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   7. RESPONSIVENESS (Mobile & Tablet Breakpoints)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  #page-content {
+    padding-top: 100px;
+  }
+  
+  /* COLLAPSE GRID: Forces the home dashboard split columns to stack vertically 
+     on mobile and tablet viewports, providing full horizontal breathing room */
+  .home-dashboard {
+    grid-template-columns: 1fr !important;
+    min-height: auto;
+    margin-top: 30px;
+  }
+  
+  .dashboard-hero {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 2.5rem 1.5rem !important;
+  }
+  
+  .dashboard-telemetry {
+    padding: 2.5rem 1.5rem !important;
+    background: rgba(10, 11, 15, 0.2) !important; /* Soften split background when stacked */
+  }
+  
+  .hero-signature-row {
+    margin-top: 3rem;
+  }
+}

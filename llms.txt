@@ -1,0 +1,5 @@
+## Software Catalogue
+
+- [AuthMe](https://github.com/VindEi/AuthMe): Upcoming cross-platform 2FA Authenticator featuring local database encryption and secure cloud backups.
+- [Project: Dodge](https://vinde.me/projects): Upcoming cross-platform indie game currently in active development.
+- [Mineflow](https://vinde.me/projects): Upcoming 3D infinite runner merged with Minesweeper-style procedural grid logic (currently in development).

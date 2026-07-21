@@ -1,0 +1,154 @@
+/* --- LAYOUT & COSMETIC CONFIG --- */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Courier New", Courier, monospace;
+  
+  /* OVERHAUL: Replaced swamp-green background with deep, pure terminal black */
+  background: #050705; 
+  
+  /* OVERHAUL: Replaced muddy algae green with crisp, high-intensity phosphor emerald */
+  color: #39d353; 
+  
+  overflow: hidden;
+}
+
+.bsod-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10% 15%;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+/* --- TEXT ELEMENTS --- */
+.terminal-wrapper {
+  position: relative;
+  z-index: 10;
+  
+  text-shadow: 0 0 6px rgba(57, 211, 83, 0.4);
+}
+
+.error-line {
+  display: block;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+  opacity: 0; /* Hidden initially for typing anim */
+}
+
+.error-top-box {
+  display: inline-block;
+  
+  /* OVERHAUL: Crisp phosphor border and box-shadow overrides */
+  border: 2px solid #39d353;
+  padding: 0.4rem 1rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  background: rgba(5, 7, 5, 0.95);
+  box-shadow: 0 0 15px rgba(57, 211, 83, 0.2);
+}
+
+.prompt-container {
+  margin-top: 3rem;
+  color: #39d353;
+  opacity: 0.8;
+}
+
+.blinking-cursor {
+  display: inline-block;
+  font-weight: bold;
+  color: #39d353; /* Replaced algae color on cursor */
+  animation: blink 1s step-end infinite;
+  opacity: 0; /* Hidden until typing starts */
+}
+
+/* --- CRT EFFECTS (Scanlines & Vignette) --- */
+.crt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  background: 
+    /* Scanlines */
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    /* Vignette */
+    radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6) 100%);
+  background-size:
+    100% 4px,
+    100% 100%;
+  animation: flicker 0.15s infinite;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0.95;
+  }
+}
+
+/* Glitch Effect on Entry */
+.bsod-container {
+  animation: jitter 4s infinite;
+}
+
+@keyframes jitter {
+  0%,
+  90%,
+  100% {
+    transform: none;
+    filter: blur(0);
+  }
+  92% {
+    transform: translateX(2px);
+    filter: blur(1px);
+  }
+  94% {
+    transform: translateX(-2px);
+  }
+  96% {
+    transform: translateX(1px);
+    filter: blur(0.5px);
+  }
+  98% {
+    transform: none;
+  }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .bsod-container {
+    padding: 20px;
+    justify-content: flex-start;
+    padding-top: 100px;
+  }
+  .error-line {
+    font-size: 0.9rem;
+  }
+}

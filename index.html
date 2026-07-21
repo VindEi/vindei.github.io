@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VindE | Home</title>
+
+    <!-- 1. PRECONNECT: Establish connections to CDNs early -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- 2. RESOURCE PRELOADING: Download core UI/UX assets in parallel -->
+    <link rel="preload" href="/assets/css/style.css" as="style" />
+    <link rel="preload" href="/assets/js/script.js" as="script" />
+    <link rel="preload" href="/assets/js/router.js" as="script" />
+
+    <!-- Meta Tags -->
+    <meta
+      name="description"
+      content="VindE - Personal Website featuring Windows software, SnapDNS, and games."
+    />
+    <meta name="theme-color" content="#ffc107" />
+    <link rel="icon" type="image/png" href="/assets/img/logo.png" />
+
+    <!-- Core Stylesheets: Loaded globally -->
+    <link rel="stylesheet" href="/assets/css/style.css?v=1.0.1" />
+    <link rel="stylesheet" href="/assets/css/header.css?v=1.0.1" />
+    <link rel="stylesheet" href="/assets/css/footer.css?v=1.0.1" />
+    <link rel="stylesheet" href="/assets/css/cursor.css?v=1.0.1" />
+    <link rel="stylesheet" href="/assets/css/projects.css?v=1.0.1" />
+    <link rel="stylesheet" href="/assets/css/data.css?v=1.0.1" />
+
+    <!-- PERFORMANCE FIX: Changed FontAwesome to load asynchronously with local fallback -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      media="print"
+      onload="this.media = 'all'"
+      onerror="
+        this.onerror = null;
+        this.href = '/assets/fonts/fa/css/all.min.css';
+      "
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Google Fonts with local fallback redirect on CDN failure -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
+      rel="stylesheet"
+      onerror="
+        this.onerror = null;
+        this.href = '/assets/fonts/fonts.css';
+      "
+    />
+  </head>
+  <body>
+    <!-- PERFORMANCE FIX: Pre-render your Header component directly to prevent layout flashes -->
+    <!-- ACCESSIBILITY FIX: Added explicit dimensions and aria-labels for perfect 100/100 scores -->
+    <div id="header-placeholder" style="opacity: 1">
+      <header>
+        <div class="header-left no-select">
+          <img
+            src="/assets/img/logo.png"
+            alt="VindE Logo"
+            class="logo"
+            width="32"
+            height="32"
+          />
+          <h1>VindE</h1>
+        </div>
+        <nav class="header-nav">
+          <a
+            href="/"
+            data-page="home"
+            class="hover-target active"
+            aria-label="Home"
+          >
+            <i class="fas fa-home"></i> <span>Home</span>
+          </a>
+          <a
+            href="/projects"
+            data-page="projects"
+            class="hover-target"
+            aria-label="Projects"
+          >
+            <i class="fas fa-box-open"></i> <span>Projects</span>
+          </a>
+        </nav>
+        <button id="theme-toggle" type="button" aria-label="Toggle theme">
+          <i class="fas fa-moon fa-fw"></i>
+        </button>
+      </header>
+    </div>
+
+    <!-- PERFORMANCE FIX: Pre-render Homepage content inside the shell so FCP/LCP occurs instantly -->
+    <main id="page-content" class="loaded">
+      <div class="home-dashboard">
+        <!-- LEFT SIDE: Your clean minimalist hero copy with Heart Signature at the bottom -->
+        <section class="dashboard-hero">
+          <div class="hero-text-block">
+            <h1>VindE</h1>
+
+            <div class="hero-subtitle">
+              <span>ALSO 'VINDEI'</span>
+            </div>
+
+            <p class="hero-desc">
+              I create random software and games.<br />
+              This is my personal site.
+            </p>
+          </div>
+
+          <!-- SIGNATURE: Restored to the bottom of the left column (no more directional hints) -->
+          <div class="hero-signature-row">
+            <span class="signature-item">
+              Made with <i class="fas fa-heart"></i> by VindE
+            </span>
+          </div>
+        </section>
+
+        <!-- RIGHT SIDE: Solid System Status & Communication Panel -->
+        <aside id="dashboard-telemetry-target" class="dashboard-telemetry">
+          <div class="telemetry-header">
+            <div class="header-title">
+              <span class="status-pulse-dot"></span>
+              <span>GITHUB CONTRIBUTIONS</span>
+            </div>
+            <!-- REPLACED: Updated to uppercase VindEI as requested -->
+            <span class="uptime-percentage">VindEI</span>
+          </div>
+
+          <!-- Dynamic commit-frequency grid (calculated and updated live by script.js) -->
+          <div class="github-grid">
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+            <span class="git-sq off"></span>
+          </div>
+
+          <!-- Section 1: Internal Platform Utilities -->
+          <div class="telemetry-section">
+            <span class="section-label">Tools</span>
+            <div class="telemetry-rows">
+              <a href="/echo" class="telemetry-row hover-target">
+                <span class="label"
+                  ><i class="fas fa-network-wired"></i> What's My IP</span
+                >
+                <span class="value">Network Telemetry &nearr;</span>
+              </a>
+              <a href="/data" class="telemetry-row hover-target">
+                <span class="label"
+                  ><i class="fas fa-shield-halved"></i> Text Encryptor</span
+                >
+                <span class="value">AES-256 Crypto &nearr;</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="metrics-separator"></div>
+
+          <!-- Section 2: Communication Channels -->
+          <div class="telemetry-section">
+            <!-- REPLACED: Updated header text to Social as requested -->
+            <span class="section-label">Social</span>
+            <div class="telemetry-rows">
+              <a
+                href="https://github.com/VindEi"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="telemetry-row hover-target"
+              >
+                <span class="label"><i class="fab fa-github"></i> GitHub</span>
+                <span class="value">github.com/VindEi &nearr;</span>
+              </a>
+              <a
+                href="https://t.me/lordhimself"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="telemetry-row hover-target"
+              >
+                <span class="label"
+                  ><i class="fab fa-telegram"></i> Telegram</span
+                >
+                <span class="value">@lordhimself &nearr;</span>
+              </a>
+              <a
+                href="https://twitter.com/V1ndEi"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="telemetry-row hover-target"
+              >
+                <span class="label"
+                  ><i class="fab fa-twitter"></i> Twitter</span
+                >
+                <span class="value">@V1ndEi &nearr;</span>
+              </a>
+              <!-- REPLACED: Updated to your official inbox@vinde.me email address -->
+              <a
+                href="mailto:inbox@vinde.me"
+                class="telemetry-row hover-target"
+              >
+                <span class="label"><i class="fas fa-envelope"></i> Email</span>
+                <span class="value">inbox@vinde.me &nearr;</span>
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- PERFORMANCE FIX: Pre-render your Footer component directly -->
+    <!-- ACCESSIBILITY FIX: Added aria-labels to footer utility shortcuts -->
+    <!-- COHESION FIX: Defaulting to display:none on initial load so it matches the home viewport -->
+    <div id="footer-placeholder" style="opacity: 1; display: none">
+      <footer>
+        <div class="footer-container">
+          <div class="footer-left" style="gap: 10px">
+            <a
+              href="/echo"
+              class="echo-btn hover-target"
+              title="System Echo"
+              aria-label="System Echo Telemetry"
+            >
+              <i class="fas fa-network-wired"></i>
+            </a>
+            <a
+              href="/data"
+              class="data-btn hover-target"
+              title="Data Vault"
+              aria-label="Text Encryptor Utility"
+            >
+              <i class="fas fa-shield-halved"></i>
+            </a>
+          </div>
+          <div class="footer-center">
+            <p>&copy; 2026 VindE | Built with ❤️ by VindE</p>
+          </div>
+          <div class="footer-right socials">
+            <a
+              href="https://github.com/VindEi"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover-target"
+              aria-label="GitHub"
+            >
+              <i class="fab fa-github"></i>
+            </a>
+            <a
+              href="https://twitter.com/V1ndEi"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover-target"
+              aria-label="Twitter"
+            >
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a
+              href="mailto:vinde@vinde.me"
+              class="hover-target"
+              aria-label="Email"
+            >
+              <i class="fas fa-envelope"></i>
+            </a>
+            <a
+              href="https://t.me/lordhimself"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover-target"
+              aria-label="Telegram"
+            >
+              <i class="fab fa-telegram"></i>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Scripts with robust relative fallback redirection targets -->
+    <script src="/assets/js/script.js" defer></script>
+    <script src="/assets/js/router.js" defer></script>
+    <script src="/assets/js/cursor.js" defer></script>
+  </body>
+</html>
