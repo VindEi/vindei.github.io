@@ -17,7 +17,12 @@
 
 - [SnapDNS](https://github.com/VindEi/SnapDNS): Cross-platform DNS Changer. Supports encrypted protocols (DoH/DoT), preset profiles, and latency diagnostics.
 - [AutoClickIt](https://github.com/VindEi/AutoClickIt): High-frequency, background automation utility for Windows.
-- [Cmd-HandyScripts](https://github.com/VindEi/Cmd-HandyScripts): Windows system maintenance scripts, and network repair utilities.
+- [Cmd-HandyScripts](https://github.com/VindEi/Cmd-HandyScripts): Windows system maintenance scripts, and network repair utilities.## Software Catalogue
+
+- [AuthMe](https://github.com/VindEi/AuthMe): Upcoming cross-platform 2FA Authenticator featuring local database encryption and secure cloud backups.
+- [Project: Dodge](https://vinde.me/projects): Upcoming cross-platform indie game currently in active development.
+- [Mineflow](https://vinde.me/projects): Upcoming 3D infinite runner merged with Minesweeper-style procedural grid logic (currently in development).
+
 - [AuthMe](https://github.com/VindEi/AuthMe): Upcoming cross-platform 2FA Authenticator featuring local database encryption and secure cloud backups.
 - [Project: Dodge](https://vinde.me/projects): Upcoming cross-platform indie game currently in active development.
 - [Mineflow](https://vinde.me/projects): Upcoming 3D infinite runner merged with Minesweeper-style procedural grid logic (currently in development).
