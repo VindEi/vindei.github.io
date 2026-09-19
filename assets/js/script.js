@@ -16,18 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
       : "fas fa-moon";
   };
 
-  // 2. Direct Static Initializer (Components are pre-rendered inside index.html)
   const initializeComponents = () => {
     document.body.classList.add("loaded");
     syncThemeIcon();
-
-    // Instantly notify router that assets are mounted
     window.dispatchEvent(new Event("componentsLoaded"));
   };
 
   initializeComponents();
 
-  // 3. Theme Toggle Listener
+  // 2. Theme Toggle Listener
   document.addEventListener("click", (e) => {
     const btn = e.target.closest("#theme-toggle");
     if (!btn) return;
@@ -43,50 +40,72 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  // Dynamic GitHub contributions tracker
+  // 3. Dynamic GitHub contributions tracker with 30-minute LocalStorage Caching
   const fetchGitHubContributions = async () => {
     const grid = document.querySelector(".github-grid");
     if (!grid) return;
 
-    try {
-      const res = await fetch("https://api.github.com/users/VindEi/events");
-      if (!res.ok) throw new Error("HTTP_ERR_OR_LIMIT");
-      const events = await res.json();
+    const CACHE_KEY = "vinde_gh_events";
+    const CACHE_TIME = "vinde_gh_events_time";
+    const now = Date.now();
+    const cachedTime = localStorage.getItem(CACHE_TIME);
+    let events = null;
 
-      const days = Array(20).fill(0);
-      const now = new Date();
+    if (cachedTime && now - parseInt(cachedTime, 10) < 30 * 60 * 1000) {
+      try {
+        events = JSON.parse(localStorage.getItem(CACHE_KEY));
+      } catch (e) {
+        events = null;
+      }
+    }
 
-      events.forEach(event => {
-        if (event.created_at) {
-          const eventDate = new Date(event.created_at);
-          const diffTime = Math.abs(now - eventDate);
-          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-          
-          if (diffDays < 20) {
-            if (event.type === "PushEvent" && event.payload && event.payload.commits) {
-              days[19 - diffDays] += event.payload.commits.length;
-            } else {
-              days[19 - diffDays] += 1;
-            }
+    if (!events) {
+      try {
+        const res = await fetch("https://api.github.com/users/VindEi/events");
+        if (!res.ok) throw new Error("HTTP_ERR_OR_LIMIT");
+        events = await res.json();
+        localStorage.setItem(CACHE_KEY, JSON.stringify(events));
+        localStorage.setItem(CACHE_TIME, now.toString());
+      } catch (err) {
+        console.warn("[GitHub Grid] Standard fallback active:", err);
+        return;
+      }
+    }
+
+    const days = Array(20).fill(0);
+    const nowDate = new Date();
+
+    events.forEach((event) => {
+      if (event.created_at) {
+        const eventDate = new Date(event.created_at);
+        const diffTime = Math.abs(nowDate - eventDate);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 20) {
+          if (event.type === "PushEvent" && event.payload?.commits) {
+            days[19 - diffDays] += event.payload.commits.length;
+          } else {
+            days[19 - diffDays] += 1;
           }
         }
-      });
+      }
+    });
 
-      const squares = grid.querySelectorAll(".git-sq");
-      squares.forEach((sq, index) => {
-        const count = days[index] || 0;
-        let level = "off";
-        if (count > 0 && count <= 2) level = "low";
-        else if (count > 2 && count <= 5) level = "medium";
-        else if (count > 5 && count <= 8) level = "high";
-        else if (count > 8) level = "max";
+    const squares = grid.querySelectorAll(".git-sq");
+    squares.forEach((sq, index) => {
+      const count = days[index] || 0;
+      let level = "off";
+      if (count > 0 && count <= 2) level = "low";
+      else if (count > 2 && count <= 5) level = "medium";
+      else if (count > 5 && count <= 8) level = "high";
+      else if (count > 8) level = "max";
 
-        sq.className = `git-sq ${level}`;
-        sq.setAttribute("title", `${count} contribution${count !== 1 ? 's' : ''} on Day ${index + 1}`);
-      });
-    } catch (err) {
-      console.warn("[GitHub Grid] Standard fallback active:", err);
-    }
+      sq.className = `git-sq ${level}`;
+      sq.setAttribute(
+        "title",
+        `${count} contribution${count !== 1 ? "s" : ""} on Day ${index + 1}`,
+      );
+    });
   };
 
   document.addEventListener("spa-content-loaded", fetchGitHubContributions);

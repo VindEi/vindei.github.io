@@ -1,57 +1,53 @@
 /**
- * Single Page Application Router with Viewport, Layout, Theme, & Asset Sandboxing
+ * Single Page Application Router
  */
 document.addEventListener("DOMContentLoaded", () => {
   const main = document.getElementById("page-content");
 
-  // SPA Route Mappings (Restored to absolute routing paths)
+  // SPA Route Mappings
   const routes = {
     "/": "/pages/home.html",
     "/projects": "/pages/projects.html",
     "/projects/snapdns": "/pages/projects/snapdns.html",
-    "/echo": "/pages/echo.html",
-    "/data": "/pages/data.html",
+    "/tools/echo": "/pages/tools/echo.html",
+    "/tools/data": "/pages/tools/data.html",
   };
 
-  // Document Title Settings
   const titles = {
     "/": "VindE | Home",
     "/projects": "VindE | Projects",
     "/projects/snapdns": "VindE | SnapDNS",
-    "/echo": "VindE | Echo",
-    "/data": "VindE | Data Encrypt",
+    "/tools/echo": "VindE | Echo",
+    "/tools/data": "VindE | Data Encrypt",
   };
 
-  // Dynamic JS Lazy Loading (Restored to absolute asset paths)
+  // Modular JS Loading
   const pageScripts = {
     "/": [],
-    "/projects": ["/assets/js/projects.js"],
-    "/projects/snapdns": ["/assets/js/projects.js"],
-    "/echo": [
+    "/projects": ["/assets/js/projects/projects.js"],
+    "/projects/snapdns": ["/assets/js/projects/snapdns.js"],
+    "/tools/echo": [
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js",
-      "/assets/js/echo.js",
+      "/assets/js/tools/echo.js",
     ],
-    "/data": ["/assets/js/data.js"],
+    "/tools/data": ["/assets/js/tools/data.js"],
   };
 
-  // Dynamic CSS Lazy Loading
+  // Modular CSS Loading
   const pageStyles = {
     "/": [],
-    "/projects": [],
-    "/projects/snapdns": [],
-    "/echo": [
+    "/projects": ["/assets/css/projects/projects.css"],
+    "/projects/snapdns": ["/assets/css/projects/snapdns.css"],
+    "/tools/echo": [
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css",
+      "/assets/css/tools/echo.css",
     ],
-    "/data": [],
+    "/tools/data": ["/assets/css/tools/data.css"],
   };
 
-  // Track Loaded Assets to Prevent Duplicates
   const loadedScripts = new Set();
   const loadedStyles = new Set();
 
-  /**
-   * Helper: Injects and resolves a stylesheet dynamically with Integrity checks
-   */
   function loadStyle(href) {
     if (loadedStyles.has(href)) return Promise.resolve();
     return new Promise((resolve, reject) => {
@@ -63,13 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
       link.rel = "stylesheet";
       link.href = href;
 
-      // SECURITY FIX: Add integrity checks for external CDNs
       if (href.includes("cdnjs.cloudflare.com")) {
         link.integrity =
           "sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==";
         link.crossOrigin = "anonymous";
-
-        // RESILIENCY FIX: Pointed fallback style redirect to assets/leaflet/
         link.onerror = () => {
           link.onerror = null;
           link.href = "/assets/leaflet/leaflet.css";
@@ -85,9 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /**
-   * Helper: Injects and resolves a script dynamically with Integrity checks
-   */
   function loadScript(src) {
     if (loadedScripts.has(src)) return Promise.resolve();
     return new Promise((resolve, reject) => {
@@ -99,13 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
       script.src = src;
       script.defer = true;
 
-      // SECURITY FIX: Add integrity checks for external CDNs
       if (src.includes("cdnjs.cloudflare.com")) {
         script.integrity =
           "sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==";
         script.crossOrigin = "anonymous";
-
-        // RESILIENCY FIX: Pointed fallback script redirect to assets/leaflet/
         script.onerror = () => {
           script.onerror = null;
           script.src = "/assets/leaflet/leaflet.js";
@@ -122,39 +109,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateActiveNav(path) {
-    // Nav links are immediately selectable on DOM load
     document
       .querySelectorAll(".header-nav a, .echo-btn, .data-btn")
       .forEach((el) => el.classList.remove("active"));
+
     document.querySelectorAll(".header-nav a").forEach((link) => {
       const href = link.getAttribute("href");
-      if (href === path || (href !== "/" && path.startsWith(href)))
+      if (href === path || (href !== "/" && path.startsWith(href))) {
         link.classList.add("active");
+      }
     });
-    if (path === "/echo" && document.querySelector(".echo-btn")) {
+
+    if (path === "/tools/echo" && document.querySelector(".echo-btn")) {
       document.querySelector(".echo-btn").classList.add("active");
     }
-    if (path === "/data" && document.querySelector(".data-btn")) {
+    if (path === "/tools/data" && document.querySelector(".data-btn")) {
       document.querySelector(".data-btn").classList.add("active");
     }
   }
 
-  // Track if this is the absolute first load session to prevent double-fetching inlined content
   let isInitialRender = true;
 
-  /**
-   * Page loading engine
-   */
   async function loadPage(path) {
+    const rawPath = path.split("#")[0];
     let cleanPath =
-      path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+      rawPath.length > 1 && rawPath.endsWith("/")
+        ? rawPath.slice(0, -1)
+        : rawPath;
     if (cleanPath === "" || cleanPath === "/index.html") cleanPath = "/";
 
     document.title = titles[cleanPath] || "VindE | 404";
     updateActiveNav(cleanPath);
 
-    // PERFORMANCE BYPASS: If landing on "/" initially, use the pre-rendered shell inside index.html.
-    // This skips the network fetch completely, dropping FCP/LCP times to <1.0s on mobile.
     if (cleanPath === "/" && isInitialRender) {
       isInitialRender = false;
       main.classList.add("loaded");
@@ -162,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Disable initial-load flag for all subsequent navigation
     isInitialRender = false;
 
     const routeFile = routes[cleanPath] || "/404.html";
@@ -178,28 +163,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const rawHtml = await res.text();
 
       let content = rawHtml;
-      let is404 = false; // Declared here so it's in scope for setTimeout
+      let is404 = false;
 
-      // Standalone parsing fallback for decoupled 404 views
       if (rawHtml.includes("bsod-container")) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(rawHtml, "text/html");
         content = doc.querySelector(".bsod-container")?.outerHTML || rawHtml;
-        is404 = true; // Mark as 404
-
-        // Dynamic asset routing
+        is404 = true;
         scriptsToLoad.push("/assets/js/error.js");
         stylesToLoad.push("/assets/css/error.css");
       }
 
-      // Out-transition current content
       main.classList.remove("loaded");
 
       setTimeout(async () => {
-        // Reset scroll state to the top on every dynamic navigation
         window.scrollTo(0, 0);
 
-        // 1. LAYOUT VISIBILITY SYSTEM (Hides footer on both Home and 404 pages)
         if (is404 || cleanPath === "/") {
           if (header) header.style.display = is404 ? "none" : "";
           if (footer) footer.style.display = "none";
@@ -208,12 +187,9 @@ document.addEventListener("DOMContentLoaded", () => {
           if (footer) footer.style.display = "";
         }
 
-        // 2. THEME PERSISTENCE SYSTEM (Completely split to prevent clashing)
         if (is404) {
-          // 404 fatal console screen must always be dark green
           document.body.classList.remove("light-theme");
         } else {
-          // All valid routes (Home, Projects, etc.) must strictly respect user theme choice
           const savedTheme = localStorage.getItem("theme") || "dark";
           if (savedTheme === "light") {
             document.body.classList.add("light-theme");
@@ -224,15 +200,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         main.innerHTML = content;
 
-        // Dynamically load stylesheets
         await Promise.all(stylesToLoad.map(loadStyle));
 
-        // Dynamically load JS dependencies in sequence
         for (const src of scriptsToLoad) {
           await loadScript(src);
         }
 
-        void main.offsetWidth; // Force Layout reflow for seamless opacity transitions
+        void main.offsetWidth;
         main.classList.add("loaded");
         document.dispatchEvent(new Event("spa-content-loaded"));
       }, 150);
@@ -243,7 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Exposed routing hook
   window.routerLoadPage = loadPage;
 
   document.body.addEventListener("click", (e) => {
@@ -254,22 +227,22 @@ document.addEventListener("DOMContentLoaded", () => {
       !link.getAttribute("target")
     ) {
       const url = link.getAttribute("href");
-
       const path = url.split("#")[0];
       let cleanPath =
         path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
       if (cleanPath === "") cleanPath = "/";
 
-      // prevent default and return early (no re-fetching, no animation flashes).
-      if (
+      const isSamePath =
         cleanPath === window.location.pathname ||
-        (cleanPath === "/" && window.location.pathname === "/index.html")
-      ) {
+        (cleanPath === "/" && window.location.pathname === "/index.html");
+      const isHashClearing =
+        window.location.hash.length > 0 && !url.includes("#");
+
+      if (isSamePath && !isHashClearing) {
         e.preventDefault();
         return;
       }
 
-      // Only intercept the link action if the clean target path is actively registered in our routes
       if (routes[cleanPath]) {
         e.preventDefault();
         history.pushState(null, null, url);

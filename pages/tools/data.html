@@ -64,7 +64,8 @@
         >
           <h2 style="margin: 0; font-size: 1.5rem">Secure Fragment</h2>
           <a
-            href="/data"
+            id="create-new-btn"
+            href="/tools/data"
             class="btn-action hover-target"
             style="font-size: 0.7rem"
             >Create New</a
@@ -100,7 +101,6 @@
           Unlock Payload
         </button>
 
-        <!-- Dynamic error message block -->
         <div
           style="
             position: absolute;
@@ -126,7 +126,7 @@
       <div class="security-brief">
         <h3
           style="
-            font-family: &quot;Oswald&quot;;
+            font-family: &quot;Oswald&quot;, sans-serif;
             font-size: 0.8rem;
             letter-spacing: 1px;
             color: var(--accent-gold);
@@ -203,7 +203,7 @@
         >
         <div id="decrypted-output" class="Encrypt-plaintext-box"></div>
         <button
-          onclick="location.href = '/data'"
+          onclick="location.href = '/tools/data'"
           class="btn-action hover-target"
           style="margin-top: 20px; width: 100%; justify-content: center"
         >

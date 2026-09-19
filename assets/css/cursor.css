@@ -1,16 +1,18 @@
-/* 
-   --- CURSOR UTILITY --- 
-   Only active on devices with a mouse (pointer: fine).
-   Touch devices will ignore this entirely.
-*/
-
+/* --- CURSOR UTILITY --- */
 @media (pointer: fine) {
-  /* Hide Default Cursor ONLY when custom cursor is ready */
+  /* Hide default cursor only on non-editable elements */
   body.custom-cursor-active,
   body.custom-cursor-active a,
-  body.custom-cursor-active button,
-  body.custom-cursor-active input {
+  body.custom-cursor-active button {
     cursor: none !important;
+  }
+
+  /* Keep native I-beam cursor on inputs and textareas */
+  body.custom-cursor-active input,
+  body.custom-cursor-active textarea,
+  body.custom-cursor-active select,
+  body.custom-cursor-active [contenteditable] {
+    cursor: text !important;
   }
 
   /* --- OUTER STICKY FRAME --- */
@@ -21,25 +23,20 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    pointer-events: none; /* Allows clicking through it */
+    pointer-events: none;
     z-index: 999999;
-
-    /* Hardware Acceleration Hints */
     will-change: transform, width, height, border-radius;
     transform: translate3d(0, 0, 0);
-
-    /* Set default opacity to 0 to hide the halo ring on empty canvas areas */
     opacity: 0;
     background-color: transparent;
-    border: 1.5px solid rgba(255, 255, 255, 0.15); /* Muted default border */
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     box-shadow: none;
-    
     transition:
       opacity 0.2s ease,
       border-color 0.2s ease;
   }
 
-  /* --- LOCKED STATE (Hovering buttons/cards) --- */
+  /* LOCKED STATE */
   #sticky-cursor.is-locked {
     opacity: 1 !important;
     border-color: rgba(255, 255, 255, 0.5) !important;
@@ -51,32 +48,29 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 8px; /* High-precision solid core */
+    width: 8px;
     height: 8px;
     border-radius: 50%;
     pointer-events: none;
-    z-index: 1000000; /* Renders on top of the outer frame */
+    z-index: 1000000;
     will-change: transform;
     transform: translate3d(0, 0, 0);
-    
     background-color: rgba(255, 255, 255, 0.7);
     mix-blend-mode: exclusion;
     box-shadow: none;
-    
     transition:
       opacity 0.2s ease,
       background-color 0.2s ease;
   }
 
-  /* --- TRANSITIONING PLUS CROSSHAIR (UX upgrade) --- */
+  /* PLUS CROSSHAIR ON HOVER */
   #sticky-cursor-inner.is-plus {
     background-color: transparent !important;
     box-shadow: none !important;
     width: 8px;
     height: 8px;
     border-radius: 0;
-    
-    mix-blend-mode: normal !important; 
+    mix-blend-mode: normal !important;
   }
 
   #sticky-cursor-inner.is-plus::before,
@@ -84,15 +78,10 @@
     content: "";
     position: absolute;
     background-color: rgba(255, 255, 255, 0.7);
-    
-    /* Replaced exclusion with normal blending to prevent pixel subtraction */
-    mix-blend-mode: normal !important; 
-    
+    mix-blend-mode: normal !important;
     transition: background-color 0.2s;
   }
 
-  /* Proportions thinned down to 1.2px thickness to render a sharp mathematical plus (+) */
-  /* Horizontal plus bar */
   #sticky-cursor-inner.is-plus::before {
     top: 3.4px;
     left: 0;
@@ -101,7 +90,6 @@
     border-radius: 1px;
   }
 
-  /* Vertical plus bar */
   #sticky-cursor-inner.is-plus::after {
     top: 0;
     left: 3.4px;
@@ -110,7 +98,7 @@
     border-radius: 1px;
   }
 
-  /* --- THEME SPECIFIC OVERRIDES --- */
+  /* THEME OVERRIDES */
   body.light-theme #sticky-cursor {
     border-color: rgba(0, 0, 0, 0.15);
   }
@@ -118,22 +106,16 @@
     border-color: rgba(0, 0, 0, 0.4) !important;
     box-shadow: none;
   }
-
   body.light-theme #sticky-cursor-inner {
     background-color: #000000 !important;
-    mix-blend-mode: normal !important; 
+    mix-blend-mode: normal !important;
     box-shadow: none;
   }
-  
   body.light-theme #sticky-cursor-inner.is-plus::before,
   body.light-theme #sticky-cursor-inner.is-plus::after {
     background-color: #000000 !important;
     mix-blend-mode: normal !important;
   }
-
-  /* SPECIFICITY OVERRIDE:
-     Forces the inner core's background back to transparent when morphed into a plus (+) 
-     in light theme, allowing the black crosshair lines to render cleanly. */
   body.light-theme #sticky-cursor-inner.is-plus {
     background-color: transparent !important;
   }

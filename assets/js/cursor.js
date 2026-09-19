@@ -1,86 +1,88 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. CRAWLER BYPASS: Disable 60fps custom cursor physics on automated testing bots
+  // 1. CRAWLER BYPASS
   if (
-    navigator.webdriver || 
-    /HeadlessChromium|Lighthouse|Speed-Insights|PageSpeed/i.test(navigator.userAgent)
+    navigator.webdriver ||
+    /HeadlessChromium|Lighthouse|Speed-Insights|PageSpeed/i.test(
+      navigator.userAgent,
+    )
   ) {
     return;
   }
 
-  // 2. MOBILE CHECK: Exit immediately if device uses touch (no mouse)
+  // 2. MOBILE CHECK
   if (!window.matchMedia("(pointer: fine)").matches) return;
 
   // 3. SETUP DUAL-ELEMENT CURSOR
   const cursor = document.createElement("div");
   cursor.id = "sticky-cursor";
-  
+
   const cursorInner = document.createElement("div");
   cursorInner.id = "sticky-cursor-inner";
 
   document.body.appendChild(cursor);
   document.body.appendChild(cursorInner);
 
-  // Apply globally to root html and body to force hide OS cursor on all browsers
   document.documentElement.classList.add("custom-cursor-active");
   document.body.classList.add("custom-cursor-active");
 
-  // State Variables
-  let mouseX = -100, mouseY = -100; // Target mouse position
-  let posX = -100, posY = -100; // Current outer positions (smooth trailing)
-  let width = 16, height = 16;
-  let innerX = -100, innerY = -100; // Current inner positions (high-speed tracking)
+  let mouseX = -100,
+    mouseY = -100;
+  let posX = -100,
+    posY = -100;
+  let width = 16,
+    height = 16;
+  let innerX = -100,
+    innerY = -100;
 
   let currentScale = 1;
   let targetScale = 1;
-
-  let targetRect = null; // Bounding box of hovered element
+  let targetRect = null;
   let isHovering = false;
   let isScrollbar = false;
+  let isOverInput = false;
 
-  // Linear Interpolation (Smoothing)
   const lerp = (start, end, factor) => start + (end - start) * factor;
 
   // 4. EVENT LISTENERS
-
-  // Track Mouse
   document.addEventListener("mousemove", (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
 
-    // Dynamic Scrollbar Detection
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth;
-    if (mouseX > window.innerWidth - scrollbarWidth - 5 && scrollbarWidth > 0) {
-      isScrollbar = true;
+    isScrollbar =
+      scrollbarWidth > 0 && mouseX > window.innerWidth - scrollbarWidth - 5;
+
+    // Check if directly hovering an input or textarea
+    isOverInput = !!e.target.closest(
+      "input, textarea, select, [contenteditable]",
+    );
+
+    if (isScrollbar || isOverInput) {
       cursor.style.opacity = "0";
       cursorInner.style.opacity = "0";
-      document.documentElement.style.cursor = "auto";
-      document.body.style.cursor = "auto";
     } else {
-      isScrollbar = false;
       cursor.style.opacity = "1";
       cursorInner.style.opacity = "1";
-      document.documentElement.style.cursor = "none";
-      document.body.style.cursor = "none";
     }
   });
 
-  // Handle Window Enter/Exit
   document.addEventListener("mouseout", (e) => {
     if (!e.relatedTarget) {
       cursor.style.opacity = "0";
       cursorInner.style.opacity = "0";
     }
   });
+
   document.addEventListener("mouseover", () => {
-    if (!isScrollbar) {
+    if (!isScrollbar && !isOverInput) {
       cursor.style.opacity = "1";
       cursorInner.style.opacity = "1";
     }
   });
 
   document.addEventListener("mousedown", () => {
-    targetScale = 0.6; 
+    targetScale = 0.6;
   });
 
   document.addEventListener("mouseup", () => {
@@ -95,28 +97,22 @@ document.addEventListener("DOMContentLoaded", () => {
     targetScale = 1;
   });
 
-  // Hover Detection (Delegation)
+  // Hover detection: excludes inputs to protect native text selection
   document.addEventListener(
     "mouseover",
     (e) => {
       if (isScrollbar) return;
 
-      // Detect interactive elements
       const target = e.target.closest(
-        "a, button, .project-card, input, .hover-target",
+        "a, button, .project-card, .hover-target",
       );
 
-      if (target) {
+      if (target && !target.closest("input, textarea")) {
         isHovering = true;
         targetRect = target.getBoundingClientRect();
-
-        // Let the outer frame wrap ALL hovered elements (cards, buttons, etc.)
         cursor.classList.add("is-locked");
-        
-        const style = window.getComputedStyle(target);
-        cursor.dataset.borderRadius = style.borderRadius;
-
-        // Morph the inner core into a plus sign (+) on hover
+        cursor.dataset.borderRadius =
+          window.getComputedStyle(target).borderRadius;
         cursorInner.classList.add("is-plus");
       } else {
         isHovering = false;
@@ -128,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     { passive: true },
   );
 
-  // Update Target Position on Scroll
   document.addEventListener(
     "scroll",
     () => {
@@ -141,20 +136,18 @@ document.addEventListener("DOMContentLoaded", () => {
     { passive: true },
   );
 
-  // 5. ANIMATION LOOP (The Physics)
+  // 5. ANIMATION LOOP
   function render() {
     let targetX, targetY, targetW, targetH, targetRadius;
 
-    if (isHovering && targetRect && !isScrollbar) {
-      // LOCKED STATE: Snap and stretch outer frame around ANY hovered element (large or small)
-      const padding = 6; 
+    if (isHovering && targetRect && !isScrollbar && !isOverInput) {
+      const padding = 6;
       targetX = targetRect.left - padding;
       targetY = targetRect.top - padding;
       targetW = targetRect.width + padding * 2;
       targetH = targetRect.height + padding * 2;
       targetRadius = cursor.dataset.borderRadius || "6px";
     } else {
-      // DEFAULT STATE: Outer frame is a loose 16px circle around the inner dot
       targetW = 16;
       targetH = 16;
       targetX = mouseX - targetW / 2;
@@ -162,9 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
       targetRadius = "50%";
     }
 
-    // Apply Physics to Outer Frame (Lerp)
     const speed = isHovering ? 0.35 : 0.45;
-
     posX = lerp(posX, targetX, speed);
     posY = lerp(posY, targetY, speed);
     width = lerp(width, targetW, speed);
@@ -178,18 +169,13 @@ document.addEventListener("DOMContentLoaded", () => {
     cursor.style.height = `${height}px`;
     cursor.style.borderRadius = targetRadius;
 
-    // Apply Physics to Inner Core (Follows mouse instantly with high-speed 0.85 tracking)
     innerX = lerp(innerX, mouseX, 0.85);
     innerY = lerp(innerY, mouseY, 0.85);
-    
-    // Offset correction based on shape states (8px size for plus, 8px for default dot)
-    const isPlus = cursorInner.classList.contains("is-plus");
-    const innerOffset = isPlus ? 4 : 4;
-    cursorInner.style.transform = `translate3d(${innerX - innerOffset}px, ${innerY - innerOffset}px, 0)`;
+
+    cursorInner.style.transform = `translate3d(${innerX - 4}px, ${innerY - 4}px, 0)`;
 
     requestAnimationFrame(render);
   }
 
-  // Start Loop
   render();
 });

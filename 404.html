@@ -4,16 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VindE | 404</title>
-    <!-- Standalone Styles (SPA loads these via head injection, but good for backup) -->
+    <link rel="stylesheet" href="/assets/css/style.css?v=1.0.1" />
     <link rel="stylesheet" href="/assets/css/error.css" />
     <link rel="stylesheet" href="/assets/css/cursor.css" />
   </head>
   <body>
-    <!-- 
-      BSOD Container 
-      Router.js extracts this div's content.
-    -->
-    <div class="bsod-container">
+    <!-- Screen-Reader Accessibility Announcement -->
+    <div class="sr-only" role="alert">
+      Error 404: Page Not Found. The requested address is invalid or corrupted.
+      Press any key or tap anywhere to return home.
+    </div>
+
+    <!-- BSOD Container -->
+    <div class="bsod-container" aria-hidden="true">
       <div class="crt-overlay"></div>
 
       <div class="terminal-wrapper">
@@ -24,10 +27,7 @@
 
         <!-- Error Details -->
         <div class="error-content">
-          <p
-            class="error-line"
-            data-text="> EXCEPTION: FILE_NOT_FOUND"
-          ></p>
+          <p class="error-line" data-text="> EXCEPTION: FILE_NOT_FOUND"></p>
           <p
             class="error-line"
             data-text="> The requested address is invalid or corrupted."
@@ -46,7 +46,6 @@
       </div>
     </div>
 
-    <!-- Logic Script (Runs only if class .bsod-container exists) -->
     <script src="/assets/js/error.js"></script>
   </body>
 </html>

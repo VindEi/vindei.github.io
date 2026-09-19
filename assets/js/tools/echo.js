@@ -1,11 +1,5 @@
 /**
  * VindE - System Echo Module
- *
- * Aggregates client-side telemetry including:
- * 1. Browser Fingerprinting (Hardware, Software, Capabilities).
- * 2. Network Intelligence (IP, ISP, Geolocation) via multi-provider race.
- * 3. Silent AdBlock detection (prevents console error pollution).
- * 4. Automatic Leaflet garbage collection on page transitions.
  */
 
 (function () {
@@ -14,13 +8,6 @@
   let echoMap = null;
   let mapCoords = null;
 
-  // ==========================================================================
-  // UTILITY FUNCTIONS
-  // ==========================================================================
-
-  /**
-   * Safely sets text content for a DOM element.
-   */
   const safeSet = (id, callback) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -37,30 +24,19 @@
     }
   };
 
-  /**
-   * Helper to determine if a data field is missing or generic.
-   */
   const isMissing = (str) => {
     return (
       !str || str === "Unknown" || str === "---" || str === "Resolved Network"
     );
   };
 
-  /**
-   * Re-renders the map when the global theme changes.
-   */
   const handleThemeChange = () => {
     if (echoMap && mapCoords) {
       updateMap(mapCoords.lat, mapCoords.lon);
     }
   };
 
-  // ==========================================================================
-  // MODULE: BROWSER & HARDWARE FINGERPRINTING
-  // ==========================================================================
-
   const getBrowserData = async () => {
-    // --- 1. Basic Identity ---
     safeSet("user-ua", () => navigator.userAgent);
     safeSet("user-os", () => navigator.platform);
     safeSet("user-lang", () =>
@@ -69,7 +45,6 @@
         : navigator.language,
     );
 
-    // --- 2. Hardware Heuristics ---
     safeSet(
       "user-res",
       () =>
@@ -84,7 +59,6 @@
       navigator.deviceMemory ? `${navigator.deviceMemory}GB+` : "8GB (Capped)",
     );
 
-    // --- 3. Environment & UI State ---
     safeSet("user-bot", () =>
       navigator.webdriver ? "Automated Script" : "Verified Human",
     );
@@ -94,13 +68,11 @@
         : "Light Mode",
     );
 
-    // Window State Fix: Compares browser footprint to screen availability
     safeSet("user-win-state", () => {
       const isMaximized = window.outerWidth >= screen.availWidth - 20;
       return isMaximized ? "Maximized" : `Windowed (${window.innerWidth}px)`;
     });
 
-    // --- 4. Silent AdBlock Detection ---
     const adBlockEl = document.getElementById("user-adblock");
     if (adBlockEl) {
       const bait = document.createElement("div");
@@ -119,7 +91,6 @@
       adBlockEl.innerText = isBlocked ? "Active" : "Inactive";
     }
 
-    // --- 5. GPU Rendering Info ---
     const gpuEl = document.getElementById("user-gpu");
     if (gpuEl) {
       try {
@@ -137,10 +108,6 @@
     }
   };
 
-  // ==========================================================================
-  // MODULE: NETWORK INTELLIGENCE (The Race)
-  // ==========================================================================
-
   const getNetworkData = async () => {
     const ipEl = document.getElementById("user-ip");
     const ispEl = document.getElementById("user-isp");
@@ -150,7 +117,6 @@
 
     if (!ipEl) return;
 
-    // UI State Reset
     if (refreshIcon) refreshIcon.classList.add("fa-spin");
     ipEl.innerText = "CONNECTING...";
     ipEl.style.color = "var(--text)";
@@ -240,7 +206,6 @@
       },
     ];
 
-    // Generate Request Array
     const requestPromises = richProviders.map(async (p) => {
       const start = performance.now();
       try {
@@ -270,7 +235,6 @@
       }
     });
 
-    // The Race (Fastest Provider Wins UI)
     let winnerProvider = null;
     let initialData = null;
 
@@ -280,10 +244,10 @@
       initialData = winner.data;
 
       finishUpdate(winner.data, globalStart, winner.time);
-      if (logSummary)
+      if (logSummary) {
         logSummary.innerText = `SRC: ${winner.provider} (Details)`;
+      }
     } catch (aggError) {
-      // Tier 2 Fallback
       try {
         const fbRes = await fetch(`https://api.ipify.org/?format=json`);
         const fbJson = await fbRes.json();
@@ -307,11 +271,11 @@
         ispEl.innerText = "Connection blocked.";
       }
     } finally {
-      if (refreshIcon)
+      if (refreshIcon) {
         setTimeout(() => refreshIcon.classList.remove("fa-spin"), 500);
+      }
     }
 
-    // The Audit (Log Population & Gap Merging)
     Promise.allSettled(requestPromises).then((results) => {
       if (!logList) return;
       logList.innerHTML = "";
@@ -364,15 +328,12 @@
           results.find((r) => r.value?.provider === winnerProvider)?.value
             ?.time || 0,
         );
-        if (logSummary)
+        if (logSummary) {
           logSummary.innerText = `SRC: ${winnerProvider} + MERGED`;
+        }
       }
     });
   };
-
-  // ==========================================================================
-  // UI RENDERING HELPERS
-  // ==========================================================================
 
   const createLogItem = (name, status, cssClass, time) => {
     const div = document.createElement("div");
@@ -393,8 +354,9 @@
     const ispEl = document.getElementById("user-isp");
 
     const endTime = performance.now();
-    if (timeEl)
+    if (timeEl) {
       timeEl.innerText = `[ LATENCY: ${(endTime - startTime).toFixed(0)}ms ]`;
+    }
 
     safeSet("user-latency", () =>
       apiLatency ? `${apiLatency.toFixed(0)}ms (Network)` : "Standard",
@@ -469,7 +431,6 @@
     }).addTo(echoMap);
   };
 
-  // --- Initializer ---
   const init = () => {
     if (!document.getElementById("user-ip")) return;
 
@@ -487,16 +448,13 @@
     document.removeEventListener("themeChanged", handleThemeChange);
     document.addEventListener("themeChanged", handleThemeChange);
 
-    // Destroys map instances, clears event timers, and resets Leaflet resize trackers on navigation away
     const handlePageCleanup = () => {
       if (!document.getElementById("map") && echoMap) {
         try {
           echoMap.remove();
           echoMap = null;
           mapCoords = null;
-        } catch (err) {
-          // Silent catch to handle layout boundary edge cases
-        }
+        } catch (err) {}
         document.removeEventListener("spa-content-loaded", handlePageCleanup);
       }
     };

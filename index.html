@@ -5,16 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VindE | Home</title>
 
-    <!-- 1. PRECONNECT: Establish connections to CDNs early -->
+    <link rel="canonical" href="https://vinde.me/" />
+
+    <!-- Open Graph & Social Embed Meta -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="VindE | Personal Website" />
+    <meta
+      property="og:description"
+      content="Personal portfolio featuring Windows software, SnapDNS, client utilities, and games."
+    />
+    <meta property="og:url" content="https://vinde.me/" />
+    <meta property="og:image" content="https://vinde.me/assets/img/logo.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@V1ndEi" />
+
+    <!-- CDN Preconnects -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- 2. RESOURCE PRELOADING: Download core UI/UX assets in parallel -->
-    <link rel="preload" href="/assets/css/style.css" as="style" />
+    <!-- Resource Preloads -->
+    <link rel="preload" href="/assets/css/style.css?v=1.0.1" as="style" />
     <link rel="preload" href="/assets/js/script.js" as="script" />
     <link rel="preload" href="/assets/js/router.js" as="script" />
 
-    <!-- Meta Tags -->
     <meta
       name="description"
       content="VindE - Personal Website featuring Windows software, SnapDNS, and games."
@@ -27,10 +40,8 @@
     <link rel="stylesheet" href="/assets/css/header.css?v=1.0.1" />
     <link rel="stylesheet" href="/assets/css/footer.css?v=1.0.1" />
     <link rel="stylesheet" href="/assets/css/cursor.css?v=1.0.1" />
-    <link rel="stylesheet" href="/assets/css/projects.css?v=1.0.1" />
-    <link rel="stylesheet" href="/assets/css/data.css?v=1.0.1" />
 
-    <!-- PERFORMANCE FIX: Changed FontAwesome to load asynchronously with local fallback -->
+    <!-- FontAwesome Async -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -45,7 +56,7 @@
       referrerpolicy="no-referrer"
     />
 
-    <!-- Google Fonts with local fallback redirect on CDN failure -->
+    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
@@ -56,8 +67,7 @@
     />
   </head>
   <body>
-    <!-- PERFORMANCE FIX: Pre-render your Header component directly to prevent layout flashes -->
-    <!-- ACCESSIBILITY FIX: Added explicit dimensions and aria-labels for perfect 100/100 scores -->
+    <!-- Header Component -->
     <div id="header-placeholder" style="opacity: 1">
       <header>
         <div class="header-left no-select">
@@ -94,25 +104,21 @@
       </header>
     </div>
 
-    <!-- PERFORMANCE FIX: Pre-render Homepage content inside the shell so FCP/LCP occurs instantly -->
+    <!-- Page Content Container -->
     <main id="page-content" class="loaded">
       <div class="home-dashboard">
-        <!-- LEFT SIDE: Your clean minimalist hero copy with Heart Signature at the bottom -->
         <section class="dashboard-hero">
           <div class="hero-text-block">
             <h1>VindE</h1>
-
             <div class="hero-subtitle">
               <span>ALSO 'VINDEI'</span>
             </div>
-
             <p class="hero-desc">
               I create random software and games.<br />
               This is my personal site.
             </p>
           </div>
 
-          <!-- SIGNATURE: Restored to the bottom of the left column (no more directional hints) -->
           <div class="hero-signature-row">
             <span class="signature-item">
               Made with <i class="fas fa-heart"></i> by VindE
@@ -120,18 +126,15 @@
           </div>
         </section>
 
-        <!-- RIGHT SIDE: Solid System Status & Communication Panel -->
         <aside id="dashboard-telemetry-target" class="dashboard-telemetry">
           <div class="telemetry-header">
             <div class="header-title">
               <span class="status-pulse-dot"></span>
               <span>GITHUB CONTRIBUTIONS</span>
             </div>
-            <!-- REPLACED: Updated to uppercase VindEI as requested -->
             <span class="uptime-percentage">VindEI</span>
           </div>
 
-          <!-- Dynamic commit-frequency grid (calculated and updated live by script.js) -->
           <div class="github-grid">
             <span class="git-sq off"></span>
             <span class="git-sq off"></span>
@@ -155,17 +158,17 @@
             <span class="git-sq off"></span>
           </div>
 
-          <!-- Section 1: Internal Platform Utilities -->
+          <!-- Section 1: Internal Platform Utilities (Updated to /tools/ paths) -->
           <div class="telemetry-section">
             <span class="section-label">Tools</span>
             <div class="telemetry-rows">
-              <a href="/echo" class="telemetry-row hover-target">
+              <a href="/tools/echo" class="telemetry-row hover-target">
                 <span class="label"
                   ><i class="fas fa-network-wired"></i> What's My IP</span
                 >
                 <span class="value">Network Telemetry &nearr;</span>
               </a>
-              <a href="/data" class="telemetry-row hover-target">
+              <a href="/tools/data" class="telemetry-row hover-target">
                 <span class="label"
                   ><i class="fas fa-shield-halved"></i> Text Encryptor</span
                 >
@@ -178,7 +181,6 @@
 
           <!-- Section 2: Communication Channels -->
           <div class="telemetry-section">
-            <!-- REPLACED: Updated header text to Social as requested -->
             <span class="section-label">Social</span>
             <div class="telemetry-rows">
               <a
@@ -212,7 +214,6 @@
                 >
                 <span class="value">@V1ndEi &nearr;</span>
               </a>
-              <!-- REPLACED: Updated to your official inbox@vinde.me email address -->
               <a
                 href="mailto:inbox@vinde.me"
                 class="telemetry-row hover-target"
@@ -226,15 +227,13 @@
       </div>
     </main>
 
-    <!-- PERFORMANCE FIX: Pre-render your Footer component directly -->
-    <!-- ACCESSIBILITY FIX: Added aria-labels to footer utility shortcuts -->
-    <!-- COHESION FIX: Defaulting to display:none on initial load so it matches the home viewport -->
+    <!-- Footer Component (Updated to /tools/ paths) -->
     <div id="footer-placeholder" style="opacity: 1; display: none">
       <footer>
         <div class="footer-container">
           <div class="footer-left" style="gap: 10px">
             <a
-              href="/echo"
+              href="/tools/echo"
               class="echo-btn hover-target"
               title="System Echo"
               aria-label="System Echo Telemetry"
@@ -242,7 +241,7 @@
               <i class="fas fa-network-wired"></i>
             </a>
             <a
-              href="/data"
+              href="/tools/data"
               class="data-btn hover-target"
               title="Data Vault"
               aria-label="Text Encryptor Utility"
@@ -273,7 +272,7 @@
               <i class="fab fa-twitter"></i>
             </a>
             <a
-              href="mailto:vinde@vinde.me"
+              href="mailto:inbox@vinde.me"
               class="hover-target"
               aria-label="Email"
             >
@@ -293,7 +292,7 @@
       </footer>
     </div>
 
-    <!-- Scripts with robust relative fallback redirection targets -->
+    <!-- Scripts -->
     <script src="/assets/js/script.js" defer></script>
     <script src="/assets/js/router.js" defer></script>
     <script src="/assets/js/cursor.js" defer></script>

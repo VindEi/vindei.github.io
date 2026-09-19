@@ -3,27 +3,20 @@
   const enc = new TextEncoder(),
     dec = new TextDecoder();
 
-  /**
-   * Safe Binary-to-Base64 conversion (Prevents stack-overflow crash limits)
-   */
   function safeUint8ToBase64(arr) {
     let bin = "";
-    const len = arr.byteLength;
-    // Iterative chunking loop bypassing maximum call stack argument thresholds
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < arr.byteLength; i++) {
       bin += String.fromCharCode(arr[i]);
     }
-    return btoa(bin);
+    return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
 
-  /**
-   * Safe Base64-to-Binary conversion
-   */
   function safeBase64ToUint8(b64) {
-    const bin = atob(b64);
-    const len = bin.length;
-    const arr = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
+    let standard = b64.replace(/-/g, "+").replace(/_/g, "/");
+    while (standard.length % 4) standard += "=";
+    const bin = atob(standard);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) {
       arr[i] = bin.charCodeAt(i);
     }
     return arr;
@@ -53,8 +46,12 @@
 
   const Encrypt = {
     encrypt: async () => {
-      const t = document.getElementById("data-input").value;
-      const p = document.getElementById("data-pass").value;
+      const inputEl = document.getElementById("data-input");
+      const passEl = document.getElementById("data-pass");
+      if (!inputEl || !passEl) return;
+
+      const t = inputEl.value;
+      const p = passEl.value;
       if (!t || !p) return;
 
       const encBtn = document.getElementById("encrypt-btn");
@@ -77,8 +74,9 @@
         res.set(v, 16);
         res.set(new Uint8Array(e), 28);
 
+        // Generates strict /tools/data# link
         document.getElementById("Encrypt-result").value =
-          `${window.location.origin}/data#${safeUint8ToBase64(res)}`;
+          `${window.location.origin}/tools/data#${safeUint8ToBase64(res)}`;
         document.getElementById("result-area").style.display = "block";
       } catch (err) {
         console.error("Encryption failed:", err);
@@ -89,8 +87,10 @@
     },
     decrypt: async () => {
       const h = window.location.hash.substring(1);
-      const p = document.getElementById("decrypt-pass").value;
-      if (!h || !p) return;
+      const passEl = document.getElementById("decrypt-pass");
+      if (!h || !passEl) return;
+      const p = passEl.value;
+      if (!p) return;
 
       const decBtn = document.getElementById("decrypt-btn");
       const prevText = decBtn.innerText;
@@ -117,6 +117,23 @@
         decBtn.innerText = prevText;
       }
     },
+  };
+
+  const resetToCreateView = () => {
+    history.pushState(null, "", "/tools/data");
+    const createSec = document.getElementById("create-section");
+    const decSec = document.getElementById("decrypt-section");
+    const resArea = document.getElementById("result-area");
+    const decContainer = document.getElementById("decrypted-output-container");
+    const input = document.getElementById("data-input");
+    const pass = document.getElementById("data-pass");
+
+    if (createSec) createSec.style.display = "block";
+    if (decSec) decSec.style.display = "none";
+    if (resArea) resArea.style.display = "none";
+    if (decContainer) decContainer.style.display = "none";
+    if (input) input.value = "";
+    if (pass) pass.value = "";
   };
 
   const init = () => {
@@ -163,11 +180,26 @@
       };
     }
 
+    const createNewBtn = document.getElementById("create-new-btn");
+    if (createNewBtn) {
+      createNewBtn.onclick = (e) => {
+        e.preventDefault();
+        resetToCreateView();
+      };
+    }
+
     if (window.location.hash.length > 20) {
       document.getElementById("create-section").style.display = "none";
       document.getElementById("decrypt-section").style.display = "block";
+    } else {
+      document.getElementById("create-section").style.display = "block";
+      document.getElementById("decrypt-section").style.display = "none";
     }
   };
+
+  window.addEventListener("hashchange", () => {
+    if (window.location.pathname === "/tools/data") init();
+  });
 
   document.addEventListener("spa-content-loaded", init);
   document.addEventListener("DOMContentLoaded", init);

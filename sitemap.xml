@@ -20,13 +20,13 @@
    </url>
    <!-- System Echo -->
    <url>
-      <loc>https://vinde.me/echo</loc>
+      <loc>https://vinde.me/tools/echo</loc>
       <lastmod>2026-05-21</lastmod>
       <priority>0.7</priority>
    </url>
-      <!-- Data Encrypt -->
+   <!-- Data Encrypt -->
    <url>
-      <loc>https://vinde.me/data</loc>
+      <loc>https://vinde.me/tools/data</loc>
       <lastmod>2026-05-21</lastmod>
       <priority>0.7</priority>
    </url>
