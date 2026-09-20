@@ -1,0 +1,157 @@
+<section class="game-container rng-module">
+  <div class="back-nav-container">
+    <a href="/hub" class="back-link hover-target">
+      <i class="fas fa-arrow-left"></i> Back to Hub
+    </a>
+  </div>
+
+  <div class="rng-tab-header">
+    <button
+      id="tab-btn-generator"
+      class="rng-tab-btn active hover-target"
+      type="button"
+    >
+      <i class="fas fa-hashtag"></i> Number
+    </button>
+    <button id="tab-btn-spinner" class="rng-tab-btn hover-target" type="button">
+      <i class="fas fa-circle-notch"></i> Wheel
+    </button>
+  </div>
+
+  <!-- VIEW 1: Number Generator (Default: 1 to 3) -->
+  <div id="rng-generator-view" class="rng-view active">
+    <div class="rng-grid">
+      <div class="panel-card rng-main-card">
+        <div class="display-box">
+          <span class="readout-label">Result</span>
+          <div id="rng-output" class="rng-readout-value">1</div>
+        </div>
+
+        <button
+          id="rng-roll-btn"
+          class="btn-action primary hover-target"
+          type="button"
+        >
+          <i class="fas fa-dice"></i> Roll
+        </button>
+      </div>
+
+      <div class="panel-card">
+        <h3>Range</h3>
+        <div class="bounds-form">
+          <div class="field-block">
+            <label>Min</label>
+            <input
+              type="number"
+              id="rng-min"
+              value="1"
+              class="hover-target"
+              inputmode="numeric"
+            />
+          </div>
+          <div class="field-block">
+            <label>Max</label>
+            <input
+              type="number"
+              id="rng-max"
+              value="3"
+              class="hover-target"
+              inputmode="numeric"
+            />
+          </div>
+        </div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+          "
+        >
+          <h3 style="margin: 0">History</h3>
+          <button
+            id="clear-rng-history-btn"
+            class="clear-history-link hover-target"
+            type="button"
+          >
+            Clear
+          </button>
+        </div>
+        <div id="rng-history" class="rng-history-track">
+          <span class="history-empty">No rolls recorded.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 2: Wheel Spinner (Default: 1, 2, 3) -->
+  <div id="rng-spinner-view" class="rng-view">
+    <div class="spinner-grid">
+      <div class="panel-card spinner-canvas-card">
+        <div class="spinner-viewport">
+          <div class="wheel-marker"></div>
+          <canvas id="wheel-canvas" width="380" height="380"></canvas>
+        </div>
+
+        <div class="wheel-action-bar">
+          <button
+            id="wheel-spin-btn"
+            class="btn-action primary hover-target"
+            type="button"
+          >
+            <i class="fas fa-rotate"></i> Spin
+          </button>
+          <div id="wheel-result-banner" class="wheel-result">
+            Pick an option
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Options</h3>
+        <div class="slice-input-bar">
+          <input
+            type="text"
+            id="slice-input"
+            placeholder="Add option..."
+            class="hover-target"
+            maxlength="18"
+          />
+          <button
+            id="slice-add-btn"
+            class="btn-action hover-target"
+            type="button"
+          >
+            <i class="fas fa-plus"></i> Add
+          </button>
+        </div>
+
+        <div id="slice-list" class="slice-list-container"></div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+          "
+        >
+          <h3 style="margin: 0">History</h3>
+          <button
+            id="clear-wheel-history-btn"
+            class="clear-history-link hover-target"
+            type="button"
+          >
+            Clear
+          </button>
+        </div>
+        <div id="wheel-history" class="rng-history-track">
+          <span class="history-empty">No spins recorded.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

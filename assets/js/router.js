@@ -4,45 +4,67 @@
 document.addEventListener("DOMContentLoaded", () => {
   const main = document.getElementById("page-content");
 
-  // SPA Route Mappings
+  // SPA Route Mappings 
   const routes = {
     "/": "/pages/home.html",
     "/projects": "/pages/projects.html",
     "/projects/snapdns": "/pages/projects/snapdns.html",
+    "/tools": "/pages/tools.html",
     "/tools/echo": "/pages/tools/echo.html",
     "/tools/data": "/pages/tools/data.html",
+    "/hub": "/pages/hub.html",
+    "/hub/snake": "/pages/hub/snake.html",
+    "/hub/rng": "/pages/hub/rng.html",
+    "/rng": "/pages/hub/rng.html",
+    "/link/rng": "/pages/hub/rng.html",
   };
 
   const titles = {
     "/": "VindE | Home",
     "/projects": "VindE | Projects",
     "/projects/snapdns": "VindE | SnapDNS",
+    "/tools": "VindE | Tools",
     "/tools/echo": "VindE | Echo",
     "/tools/data": "VindE | Data Encrypt",
+    "/hub": "VindE | Hub",
+    "/hub/snake": "VindE | Snake",
+    "/hub/rng": "VindE | Randomizer & Wheel",
+    "/rng": "VindE | Randomizer & Wheel",
+    "/link/rng": "VindE | Randomizer & Wheel",
   };
 
-  // Modular JS Loading
   const pageScripts = {
     "/": [],
     "/projects": ["/assets/js/projects/projects.js"],
     "/projects/snapdns": ["/assets/js/projects/snapdns.js"],
+    "/tools": [],
     "/tools/echo": [
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js",
       "/assets/js/tools/echo.js",
     ],
     "/tools/data": ["/assets/js/tools/data.js"],
+    "/hub": [],
+    "/hub/snake": ["/assets/js/hub/snake.js"],
+    "/hub/rng": ["/assets/js/hub/rng.js"],
+    "/rng": ["/assets/js/hub/rng.js"],
+    "/link/rng": ["/assets/js/hub/rng.js"],
   };
 
-  // Modular CSS Loading
   const pageStyles = {
     "/": [],
     "/projects": ["/assets/css/projects/projects.css"],
     "/projects/snapdns": ["/assets/css/projects/snapdns.css"],
+    "/tools": ["/assets/css/tools/tools.css"],
     "/tools/echo": [
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css",
       "/assets/css/tools/echo.css",
     ],
     "/tools/data": ["/assets/css/tools/data.css"],
+    "/hub": ["/assets/css/hub/hub.css"],
+    "/hub/snake": ["/assets/css/hub/snake.css"],
+    "/hub/rng": ["/assets/css/hub/rng.css"],
+    "/rng": ["/assets/css/hub/rng.css"],
+    "/link/rng": ["/assets/css/hub/rng.css"],
   };
 
   const loadedScripts = new Set();
@@ -110,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateActiveNav(path) {
     document
-      .querySelectorAll(".header-nav a, .echo-btn, .data-btn")
+      .querySelectorAll(".header-nav a, .tools-btn, .hub-btn")
       .forEach((el) => el.classList.remove("active"));
 
     document.querySelectorAll(".header-nav a").forEach((link) => {
@@ -120,11 +142,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    if (path === "/tools/echo" && document.querySelector(".echo-btn")) {
-      document.querySelector(".echo-btn").classList.add("active");
+    if (
+      (path === "/tools" || path.startsWith("/tools/")) &&
+      document.querySelector(".tools-btn")
+    ) {
+      document.querySelector(".tools-btn").classList.add("active");
     }
-    if (path === "/tools/data" && document.querySelector(".data-btn")) {
-      document.querySelector(".data-btn").classList.add("active");
+    if (
+      (path === "/hub" ||
+        path.startsWith("/hub/") ||
+        path === "/rng" ||
+        path === "/link/rng") &&
+      document.querySelector(".hub-btn")
+    ) {
+      document.querySelector(".hub-btn").classList.add("active");
     }
   }
 

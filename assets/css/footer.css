@@ -2,7 +2,7 @@ footer {
   position: relative;
   width: 100%;
   padding: 1.5rem 2rem;
-  margin-top: auto; /* Pushes footer to bottom in flex container */
+  margin-top: auto;
   background: transparent;
   color: var(--text-dim);
   font-family: "Inter", sans-serif;
@@ -24,12 +24,14 @@ footer:hover {
   align-items: center;
 }
 
-/* --- LEFT SIDE (Echo) --- */
+/* LEFT SIDE: Tools & Hub icons */
 .footer-left {
   display: flex;
   justify-content: flex-start;
 }
 
+.tools-btn,
+.hub-btn,
 .echo-btn,
 .data-btn {
   display: inline-flex;
@@ -45,6 +47,8 @@ footer:hover {
   border-radius: 50%;
 }
 
+.tools-btn:hover,
+.hub-btn:hover,
 .echo-btn:hover,
 .data-btn:hover {
   opacity: 1;
@@ -53,7 +57,8 @@ footer:hover {
   border-color: rgba(255, 193, 7, 0.1);
 }
 
-/* Active State (controlled by router.js) */
+.tools-btn.active,
+.hub-btn.active,
 .echo-btn.active,
 .data-btn.active {
   opacity: 1 !important;
@@ -63,11 +68,12 @@ footer:hover {
   box-shadow: 0 0 15px rgba(255, 193, 7, 0.1);
 }
 
-.echo-btn i {
+.tools-btn i,
+.hub-btn i {
   font-size: 1rem;
 }
 
-/* --- CENTER SIDE --- */
+/* CENTER SIDE */
 .footer-center {
   text-align: center;
 }
@@ -76,7 +82,7 @@ footer:hover {
   white-space: nowrap;
 }
 
-/* --- RIGHT SIDE (Socials) --- */
+/* RIGHT SIDE: Socials */
 .footer-right {
   display: flex;
   justify-content: flex-end;
@@ -105,11 +111,10 @@ footer:hover {
   transform: translateY(-2px);
 }
 
-/* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 768px) {
   .footer-container {
     display: flex;
-    flex-direction: column-reverse; /* Stack nicely: Socials, Text, Echo at bottom */
+    flex-direction: column-reverse;
     gap: 1rem;
     text-align: center;
   }

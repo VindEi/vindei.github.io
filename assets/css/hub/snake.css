@@ -1,0 +1,259 @@
+/* =========================================
+   SNAKE GAME STYLES
+   ========================================= */
+
+.snake-module {
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.snake-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.canvas-viewport-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.viewport-telemetry-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.85rem;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.telemetry-metrics {
+  display: flex;
+  gap: 15px;
+  color: var(--text-dim);
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.telemetry-metrics b {
+  color: var(--accent-gold);
+}
+
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
+  background: #050608;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+body.light-theme .canvas-wrapper {
+  background: #e1e4ea;
+}
+
+#snake-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  outline: none;
+}
+
+/* Modal Overlay */
+.game-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 7, 10, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 10;
+}
+
+.game-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.overlay-modal {
+  text-align: center;
+  padding: 20px;
+}
+
+.overlay-modal h2 {
+  font-size: 2rem;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+
+.overlay-modal p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Mobile Virtual D-Pad */
+.mobile-dpad {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dpad-row {
+  display: flex;
+  gap: 8px;
+}
+
+.dpad-row.middle {
+  align-items: center;
+}
+
+.dpad-core {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.dpad-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: #11131a;
+  color: var(--text);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color 0.1s,
+    transform 0.05s;
+}
+
+.dpad-btn:active {
+  background: var(--accent-gold);
+  color: #000;
+  transform: scale(0.95);
+}
+
+body.light-theme .dpad-btn {
+  background: #ffffff;
+  color: #000;
+}
+
+.game-side-panel .panel-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.game-side-panel h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 1rem;
+  color: var(--accent-gold);
+}
+
+/* Difficulty Selector */
+.speed-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.speed-btn {
+  background: #11131a;
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+}
+
+.speed-btn:hover {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.speed-btn.active {
+  background: var(--accent-gold);
+  color: #08090d;
+  border-color: var(--accent-gold);
+}
+
+body.light-theme .speed-btn {
+  background: #ffffff;
+  color: #555;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .speed-btn.active {
+  background: var(--accent-gold);
+  color: #08090d;
+  border-color: var(--accent-gold);
+}
+
+/* Controls Guide */
+.controls-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.control-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+@media (max-width: 900px) {
+  .snake-layout {
+    grid-template-columns: 1fr;
+  }
+  .mobile-dpad {
+    display: flex;
+  }
+}

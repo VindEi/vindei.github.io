@@ -23,25 +23,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Resource Preloads -->
+    <!-- Core Resource Preloads -->
     <link rel="preload" href="/assets/css/style.css?v=1.0.1" as="style" />
     <link rel="preload" href="/assets/js/script.js" as="script" />
     <link rel="preload" href="/assets/js/router.js" as="script" />
 
     <meta
       name="description"
-      content="VindE - Personal Website featuring Windows software, SnapDNS, and games."
+      content="VindE - Personal Website featuring Windows software, SnapDNS, client utilities, and games."
     />
     <meta name="theme-color" content="#ffc107" />
     <link rel="icon" type="image/png" href="/assets/img/logo.png" />
 
-    <!-- Core Stylesheets: Loaded globally -->
+    <!-- Global Core Stylesheets -->
     <link rel="stylesheet" href="/assets/css/style.css?v=1.0.1" />
     <link rel="stylesheet" href="/assets/css/header.css?v=1.0.1" />
     <link rel="stylesheet" href="/assets/css/footer.css?v=1.0.1" />
     <link rel="stylesheet" href="/assets/css/cursor.css?v=1.0.1" />
 
-    <!-- FontAwesome Async -->
+    <!-- FontAwesome Async Loader -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -67,7 +67,7 @@
     />
   </head>
   <body>
-    <!-- Header Component -->
+    <!-- Top Header -->
     <div id="header-placeholder" style="opacity: 1">
       <header>
         <div class="header-left no-select">
@@ -104,9 +104,10 @@
       </header>
     </div>
 
-    <!-- Page Content Container -->
+    <!-- SPA Dynamic Viewport -->
     <main id="page-content" class="loaded">
       <div class="home-dashboard">
+        <!-- Hero Section -->
         <section class="dashboard-hero">
           <div class="hero-text-block">
             <h1>VindE</h1>
@@ -126,6 +127,7 @@
           </div>
         </section>
 
+        <!-- Telemetry & Directory Column -->
         <aside id="dashboard-telemetry-target" class="dashboard-telemetry">
           <div class="telemetry-header">
             <div class="header-title">
@@ -158,7 +160,7 @@
             <span class="git-sq off"></span>
           </div>
 
-          <!-- Section 1: Internal Platform Utilities (Updated to /tools/ paths) -->
+          <!-- Section 1: Tools Sub-Pages -->
           <div class="telemetry-section">
             <span class="section-label">Tools</span>
             <div class="telemetry-rows">
@@ -179,7 +181,26 @@
 
           <div class="metrics-separator"></div>
 
-          <!-- Section 2: Communication Channels -->
+          <!-- Section 2: Hub Sub-Pages -->
+          <div class="telemetry-section">
+            <span class="section-label">Hub</span>
+            <div class="telemetry-rows">
+              <a href="/hub/snake" class="telemetry-row hover-target">
+                <span class="label"><i class="fas fa-gamepad"></i> Snake</span>
+                <span class="value">Retro Arcade &nearr;</span>
+              </a>
+              <a href="/hub/rng" class="telemetry-row hover-target">
+                <span class="label"
+                  ><i class="fas fa-arrows-rotate"></i> Randomizer</span
+                >
+                <span class="value">Numbers & Wheel &nearr;</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="metrics-separator"></div>
+
+          <!-- Section 3: Communication Channels -->
           <div class="telemetry-section">
             <span class="section-label">Social</span>
             <div class="telemetry-rows">
@@ -227,26 +248,26 @@
       </div>
     </main>
 
-    <!-- Footer Component (Updated to /tools/ paths) -->
+    <!-- Persistent Footer Component -->
     <div id="footer-placeholder" style="opacity: 1; display: none">
       <footer>
         <div class="footer-container">
           <div class="footer-left" style="gap: 10px">
             <a
-              href="/tools/echo"
-              class="echo-btn hover-target"
-              title="System Echo"
-              aria-label="System Echo Telemetry"
+              href="/tools"
+              class="tools-btn hover-target"
+              title="Tools"
+              aria-label="Tools Directory"
             >
-              <i class="fas fa-network-wired"></i>
+              <i class="fas fa-screwdriver-wrench"></i>
             </a>
             <a
-              href="/tools/data"
-              class="data-btn hover-target"
-              title="Data Vault"
-              aria-label="Text Encryptor Utility"
+              href="/hub"
+              class="hub-btn hover-target"
+              title="Games Hub"
+              aria-label="Games Hub"
             >
-              <i class="fas fa-shield-halved"></i>
+              <i class="fas fa-gamepad"></i>
             </a>
           </div>
           <div class="footer-center">

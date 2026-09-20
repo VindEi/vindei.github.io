@@ -13,7 +13,7 @@
   --text-dim: #717380;
   --accent-gold: #ffc107;
   --accent-red: #ff3b5c;
-  --border-color: rgba(255, 255, 255, 0.03);
+  --border-color: rgba(255, 255, 255, 0.06);
   --shadow:
     0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
@@ -25,53 +25,13 @@ body.light-theme {
   --text-dim: #656775;
   --accent-gold: #ffb300;
   --accent-red: #e02443;
-  --border-color: rgba(0, 0, 0, 0.06);
+  --border-color: rgba(0, 0, 0, 0.08);
   --shadow:
     0 4px 12px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 body.light-theme .dashboard-telemetry {
   background: rgba(0, 0, 0, 0.015) !important;
-}
-
-body.light-theme .btn-action {
-  background: #ffffff !important;
-  color: #0e0e11 !important;
-  border-color: rgba(0, 0, 0, 0.1) !important;
-}
-
-body.light-theme .btn-action:hover {
-  background: var(--accent-gold) !important;
-  color: #08090d !important;
-  border-color: var(--accent-gold) !important;
-}
-
-body.light-theme .btn-action.primary {
-  background: var(--accent-gold) !important;
-  color: #08090d !important;
-  border-color: var(--accent-gold) !important;
-}
-
-body.light-theme .btn-action.primary:hover {
-  background: #e0a300 !important;
-  border-color: #e0a300 !important;
-}
-
-/* GitHub Contribution spectrum */
-body.light-theme .github-grid .git-sq.off {
-  background: #ebedf0;
-}
-body.light-theme .github-grid .git-sq.low {
-  background: #9be9a8;
-}
-body.light-theme .github-grid .git-sq.medium {
-  background: #40c463;
-}
-body.light-theme .github-grid .git-sq.high {
-  background: #30a14e;
-}
-body.light-theme .github-grid .git-sq.max {
-  background: #216e39;
 }
 
 /* ==========================================================================
@@ -109,7 +69,6 @@ body {
   min-height: 100vh;
 }
 
-/* Accessibility screen-reader only utility */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -122,13 +81,119 @@ body {
   border: 0;
 }
 
+/* --- GLOBAL BUTTON STYLING --- */
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: #11131b;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+  text-decoration: none;
+}
+
+.btn-action:hover {
+  background: var(--accent-gold);
+  color: #08090d;
+  border-color: var(--accent-gold);
+}
+
+.btn-action.primary {
+  background: var(--accent-gold);
+  color: #08090d;
+  border-color: var(--accent-gold);
+}
+
+.btn-action.primary:hover {
+  background: #e0a300;
+  border-color: #e0a300;
+}
+
+.btn-action.disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  border-color: #333;
+  color: #777;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .btn-action {
+  background: #ffffff;
+  color: #0d0e12;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .btn-action:hover {
+  background: var(--accent-gold);
+  color: #08090d;
+  border-color: var(--accent-gold);
+}
+
+body.light-theme .btn-action.primary {
+  background: var(--accent-gold);
+  color: #08090d;
+  border-color: var(--accent-gold);
+}
+
+body.light-theme .btn-action.primary:hover {
+  background: #e0a300;
+  border-color: #e0a300;
+}
+
+/* Back Link Utility */
+.back-nav-container {
+  margin-bottom: 1.5rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dim);
+  font-family: "Oswald", sans-serif;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: 0.2s;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--accent-gold);
+  transform: translateX(-4px);
+  background: rgba(255, 193, 7, 0.05);
+}
+
+/* Keyboard / Helper Badges */
+.key-badge {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 0.75rem;
+  padding: 3px 6px;
+  background: var(--bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--accent-gold);
+}
+
 header,
 footer,
 .feature-card,
 .project-card,
-.btn,
-.project-detail,
-.back-link,
+.hub-card,
+.panel-card,
 #theme-toggle {
   transition:
     background-color 0.3s ease,
@@ -137,7 +202,7 @@ footer,
     box-shadow 0.3s ease;
 }
 
-/* Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -191,7 +256,7 @@ body.loaded #footer-placeholder {
 }
 
 /* ==========================================================================
-   4. TYPOGRAPHY & UI
+   4. TYPOGRAPHY & TAGS
    ========================================================================== */
 
 h1,
@@ -210,9 +275,6 @@ h1 {
   font-weight: 800;
 }
 
-body.light-theme h1 {
-  text-shadow: none;
-}
 body.light-theme h2,
 body.light-theme h3 {
   color: #000;
@@ -227,24 +289,6 @@ a:hover {
   color: var(--accent-gold);
 }
 
-.btn {
-  display: inline-block;
-  padding: 10px 24px;
-  background: transparent;
-  border: 2px solid var(--accent-gold);
-  color: var(--accent-gold);
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.btn:hover {
-  background: var(--accent-gold);
-  color: #000;
-  box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
-}
-
 .tag-pill {
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.65rem !important;
@@ -254,6 +298,22 @@ a:hover {
   padding: 4px 8px !important;
   border-radius: 4px !important;
   border: 1px solid var(--border-color) !important;
+}
+
+.tag-pill.license {
+  color: #4caf50;
+  border-color: #4caf50 !important;
+  background: rgba(76, 175, 80, 0.1);
+}
+.tag-pill.type {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold) !important;
+  background: rgba(255, 193, 7, 0.1);
+}
+.tag-pill.platform {
+  color: #2196f3;
+  border-color: #2196f3 !important;
+  background: rgba(33, 150, 243, 0.1);
 }
 
 /* ==========================================================================
@@ -492,10 +552,7 @@ a.telemetry-row:hover .value {
   transition: color 0.15s ease-out;
 }
 
-/* ==========================================================================
-   6. ANIMATIONS (Cleaned & De-duplicated)
-   ========================================================================== */
-
+/* Animations */
 @keyframes pulseGreen {
   0%,
   100% {
@@ -528,10 +585,6 @@ a.telemetry-row:hover .value {
     transform: translateY(0);
   }
 }
-
-/* ==========================================================================
-   7. RESPONSIVENESS
-   ========================================================================== */
 
 @media (max-width: 900px) {
   #page-content {
