@@ -1,7 +1,8 @@
 (function () {
   "use strict";
-  const enc = new TextEncoder(),
-    dec = new TextDecoder();
+
+  const enc = new TextEncoder();
+  const dec = new TextDecoder();
 
   function safeUint8ToBase64(arr) {
     let bin = "";
@@ -44,7 +45,7 @@
     );
   }
 
-  const Encrypt = {
+  const EncryptHandler = {
     encrypt: async () => {
       const inputEl = document.getElementById("data-input");
       const passEl = document.getElementById("data-pass");
@@ -57,7 +58,7 @@
       const encBtn = document.getElementById("encrypt-btn");
       const prevText = encBtn.innerText;
       encBtn.disabled = true;
-      encBtn.innerText = "Deriving Keys & Locking...";
+      encBtn.innerText = "Encrypting...";
 
       try {
         const s = crypto.getRandomValues(new Uint8Array(16));
@@ -74,12 +75,12 @@
         res.set(v, 16);
         res.set(new Uint8Array(e), 28);
 
-        // Generates strict /tools/data# link
-        document.getElementById("Encrypt-result").value =
-          `${window.location.origin}/tools/data#${safeUint8ToBase64(res)}`;
-        document.getElementById("result-area").style.display = "block";
+        const base = window.routerBasePath || "";
+        const resultUrl = `${window.location.origin}${base}/tools/data#${safeUint8ToBase64(res)}`;
+        document.getElementById("encrypt-result").value = resultUrl;
+        document.getElementById("result-area").classList.remove("is-hidden");
       } catch (err) {
-        console.error("Encryption failed:", err);
+        console.error("Encryption error:", err);
       } finally {
         encBtn.disabled = false;
         encBtn.innerText = prevText;
@@ -95,7 +96,7 @@
       const decBtn = document.getElementById("decrypt-btn");
       const prevText = decBtn.innerText;
       decBtn.disabled = true;
-      decBtn.innerText = "Unlocking Crypt...";
+      decBtn.innerText = "Decrypting...";
 
       try {
         const d = safeBase64ToUint8(h);
@@ -107,11 +108,12 @@
         );
 
         document.getElementById("decrypted-output").innerText = dec.decode(out);
-        document.getElementById("decrypted-output-container").style.display =
-          "block";
-        document.getElementById("decrypt-error").style.display = "none";
+        document
+          .getElementById("decrypted-output-container")
+          .classList.remove("is-hidden");
+        document.getElementById("decrypt-error").classList.add("is-hidden");
       } catch (e) {
-        document.getElementById("decrypt-error").style.display = "block";
+        document.getElementById("decrypt-error").classList.remove("is-hidden");
       } finally {
         decBtn.disabled = false;
         decBtn.innerText = prevText;
@@ -120,7 +122,9 @@
   };
 
   const resetToCreateView = () => {
-    history.pushState(null, "", "/tools/data");
+    const base = window.routerBasePath || "";
+    history.pushState(null, "", `${base}/tools/data`);
+
     const createSec = document.getElementById("create-section");
     const decSec = document.getElementById("decrypt-section");
     const resArea = document.getElementById("result-area");
@@ -128,23 +132,23 @@
     const input = document.getElementById("data-input");
     const pass = document.getElementById("data-pass");
 
-    if (createSec) createSec.style.display = "block";
-    if (decSec) decSec.style.display = "none";
-    if (resArea) resArea.style.display = "none";
-    if (decContainer) decContainer.style.display = "none";
+    if (createSec) createSec.classList.remove("is-hidden");
+    if (decSec) decSec.classList.add("is-hidden");
+    if (resArea) resArea.classList.add("is-hidden");
+    if (decContainer) decContainer.classList.add("is-hidden");
     if (input) input.value = "";
     if (pass) pass.value = "";
   };
 
   const init = () => {
-    const eB = document.getElementById("encrypt-btn");
-    if (!eB) return;
+    const encBtn = document.getElementById("encrypt-btn");
+    if (!encBtn) return;
 
-    eB.onclick = Encrypt.encrypt;
-    document.getElementById("decrypt-btn").onclick = Encrypt.decrypt;
+    encBtn.onclick = EncryptHandler.encrypt;
+    document.getElementById("decrypt-btn").onclick = EncryptHandler.decrypt;
 
     document.getElementById("decrypt-pass").oninput = () => {
-      document.getElementById("decrypt-error").style.display = "none";
+      document.getElementById("decrypt-error").classList.add("is-hidden");
     };
 
     document.getElementById("gen-pass-btn").onclick = () => {
@@ -157,12 +161,12 @@
         .join("");
     };
 
-    document.getElementById("copy-Encrypt-btn").onclick = (e) => {
-      navigator.clipboard.writeText(
-        document.getElementById("Encrypt-result").value,
-      );
-      e.target.innerText = "Copied";
-      setTimeout(() => (e.target.innerText = "Copy"), 2000);
+    document.getElementById("copy-encrypt-btn").onclick = () => {
+      const copyInput = document.getElementById("encrypt-result");
+      navigator.clipboard.writeText(copyInput.value);
+      const copyBtn = document.getElementById("copy-encrypt-btn");
+      copyBtn.innerText = "Copied";
+      setTimeout(() => (copyBtn.innerText = "Copy"), 2000);
     };
 
     const toggleBtn = document.getElementById("toggle-pass-btn");
@@ -188,19 +192,24 @@
       };
     }
 
+    const closeFragBtn = document.getElementById("close-fragment-btn");
+    if (closeFragBtn) {
+      closeFragBtn.onclick = resetToCreateView;
+    }
+
     if (window.location.hash.length > 20) {
-      document.getElementById("create-section").style.display = "none";
-      document.getElementById("decrypt-section").style.display = "block";
+      document.getElementById("create-section").classList.add("is-hidden");
+      document.getElementById("decrypt-section").classList.remove("is-hidden");
     } else {
-      document.getElementById("create-section").style.display = "block";
-      document.getElementById("decrypt-section").style.display = "none";
+      document.getElementById("create-section").classList.remove("is-hidden");
+      document.getElementById("decrypt-section").classList.add("is-hidden");
     }
   };
 
   window.addEventListener("hashchange", () => {
-    if (window.location.pathname === "/tools/data") init();
+    if (window.location.pathname.endsWith("/tools/data")) init();
   });
 
   document.addEventListener("spa-content-loaded", init);
-  document.addEventListener("DOMContentLoaded", init);
+  init();
 })();

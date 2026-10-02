@@ -1,10 +1,6 @@
-/* =========================================
-   TOOLS DIRECTORY STYLES
-   ========================================= */
-
 .tools-page {
   padding-top: 1rem;
-  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .tools-header {
@@ -54,11 +50,7 @@
 .tool-card:hover {
   transform: translateY(-4px);
   border-color: var(--accent-gold);
-  background: #10121a;
-}
-
-body.light-theme .tool-card:hover {
-  background: #ffffff !important;
+  background: var(--surface-hover);
 }
 
 .tool-card-top {

@@ -1,4 +1,4 @@
-.Encrypt-grid {
+.encrypt-grid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 2rem;
@@ -6,24 +6,22 @@
   align-items: stretch;
 }
 
-.Encrypt-main-card,
-.Encrypt-side-card {
-  background: var(--surface) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 6px !important;
-  padding: 1.5rem !important;
-  box-shadow: var(--shadow) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+.encrypt-main-card,
+.encrypt-side-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
   transition:
     border-color 0.1s ease-out,
-    background-color 0.1s ease-out !important;
+    background-color 0.1s ease-out;
 }
 
 #data-input,
 #data-pass,
 #decrypt-pass,
-#Encrypt-result {
+#encrypt-result {
   cursor: text !important;
   width: 100%;
   background: var(--bg);
@@ -39,6 +37,10 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 1.5rem;
+}
+
+.field-full {
+  flex: 1;
 }
 
 .field-block label {
@@ -61,6 +63,62 @@
   flex: 1;
 }
 
+.btn-full-width {
+  width: 100%;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-small {
+  font-size: 0.7rem;
+}
+
+.decrypt-panel {
+  position: relative;
+}
+
+.decrypt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.decrypt-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.decrypt-desc {
+  color: var(--text-dim);
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+}
+
+.decrypt-error-container {
+  position: absolute;
+  bottom: -25px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.error-text {
+  color: var(--accent-red);
+  font-family: "Oswald", sans-serif;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.security-heading {
+  font-family: "Oswald", sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  color: var(--accent-gold);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
 .spec-list {
   list-style: none;
   padding: 0;
@@ -76,34 +134,31 @@
 
 .spec-list li strong {
   display: block;
-  font-family: "Oswald";
+  font-family: "Oswald", sans-serif;
   font-size: 0.7rem;
   text-transform: uppercase;
   color: var(--text);
   margin-bottom: 4px;
 }
 
-.status-box {
-  text-align: center;
-  padding: 20px 0;
+.section-divider {
+  margin: 25px 0;
+  height: 1px;
+  background: var(--border-color);
 }
 
-.Encrypt-pulse-icon {
-  font-size: 3.5rem;
-  color: var(--accent-gold);
-  opacity: 0.3;
-  margin-bottom: 15px;
-  animation: vPulse 3s infinite;
+.result-pill {
+  margin-bottom: 10px;
 }
 
-.status-box p {
-  font-family: "Oswald";
-  font-size: 0.65rem;
-  letter-spacing: 2px;
+.result-note {
+  font-size: 0.8rem;
   color: var(--text-dim);
+  margin-bottom: 15px;
+  line-height: 1.4;
 }
 
-.Encrypt-plaintext-box {
+.encrypt-plaintext-box {
   background: var(--bg);
   padding: 20px;
   border-radius: 8px;
@@ -113,26 +168,12 @@
   text-align: left;
 }
 
-.error-text {
-  color: var(--accent-red);
-  font-family: "Oswald";
-  font-size: 0.8rem;
-}
-
-@keyframes vPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.2;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.4;
-  }
+.close-btn-spacing {
+  margin-top: 20px;
 }
 
 @media (max-width: 900px) {
-  .Encrypt-grid {
+  .encrypt-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -6,7 +6,6 @@
   </div>
 
   <div class="snake-layout">
-    <!-- Main Canvas Viewport -->
     <div class="canvas-viewport-card">
       <div class="viewport-telemetry-bar">
         <div class="status-indicator">
@@ -22,7 +21,6 @@
       <div class="canvas-wrapper">
         <canvas id="snake-canvas" width="400" height="400"></canvas>
 
-        <!-- Start / Game Over Overlay -->
         <div id="snake-overlay" class="game-overlay active">
           <div class="overlay-modal">
             <h2 id="overlay-title">Snake</h2>
@@ -38,7 +36,6 @@
         </div>
       </div>
 
-      <!-- Mobile D-Pad -->
       <div class="mobile-dpad" id="snake-dpad">
         <div class="dpad-row">
           <button class="dpad-btn hover-target" data-dir="UP" aria-label="Up">
@@ -74,7 +71,6 @@
       </div>
     </div>
 
-    <!-- Side Panel -->
     <div class="game-side-panel">
       <div class="panel-card">
         <h3>Difficulty</h3>
@@ -96,15 +92,14 @@
 
         <button
           id="snake-pause-btn"
-          class="btn-action hover-target"
-          style="width: 100%; margin-top: 1.5rem"
+          class="btn-action hover-target snake-pause-btn"
           type="button"
         >
           <i class="fas fa-pause"></i> Pause Game
         </button>
       </div>
 
-      <div class="panel-card" style="margin-top: 1.5rem">
+      <div class="panel-card controls-card">
         <h3>Controls</h3>
         <div class="controls-guide">
           <div class="control-row-item">

@@ -1,13 +1,9 @@
-/* --- CURSOR UTILITY --- */
 @media (pointer: fine) {
-  /* Hide default cursor only on non-editable elements */
   body.custom-cursor-active,
-  body.custom-cursor-active a,
-  body.custom-cursor-active button {
+  body.custom-cursor-active * {
     cursor: none !important;
   }
 
-  /* Keep native I-beam cursor on inputs and textareas */
   body.custom-cursor-active input,
   body.custom-cursor-active textarea,
   body.custom-cursor-active select,
@@ -15,7 +11,6 @@
     cursor: text !important;
   }
 
-  /* --- OUTER STICKY FRAME --- */
   #sticky-cursor {
     position: fixed;
     top: 0;
@@ -30,20 +25,16 @@
     opacity: 0;
     background-color: transparent;
     border: 1.5px solid rgba(255, 255, 255, 0.15);
-    box-shadow: none;
     transition:
       opacity 0.2s ease,
       border-color 0.2s ease;
   }
 
-  /* LOCKED STATE */
   #sticky-cursor.is-locked {
     opacity: 1 !important;
     border-color: rgba(255, 255, 255, 0.5) !important;
-    box-shadow: none;
   }
 
-  /* --- INNER CORE POINTER --- */
   #sticky-cursor-inner {
     position: fixed;
     top: 0;
@@ -57,16 +48,13 @@
     transform: translate3d(0, 0, 0);
     background-color: rgba(255, 255, 255, 0.7);
     mix-blend-mode: exclusion;
-    box-shadow: none;
     transition:
       opacity 0.2s ease,
       background-color 0.2s ease;
   }
 
-  /* PLUS CROSSHAIR ON HOVER */
   #sticky-cursor-inner.is-plus {
     background-color: transparent !important;
-    box-shadow: none !important;
     width: 8px;
     height: 8px;
     border-radius: 0;
@@ -98,23 +86,19 @@
     border-radius: 1px;
   }
 
-  /* THEME OVERRIDES */
   body.light-theme #sticky-cursor {
     border-color: rgba(0, 0, 0, 0.15);
   }
   body.light-theme #sticky-cursor.is-locked {
     border-color: rgba(0, 0, 0, 0.4) !important;
-    box-shadow: none;
   }
   body.light-theme #sticky-cursor-inner {
     background-color: #000000 !important;
     mix-blend-mode: normal !important;
-    box-shadow: none;
   }
   body.light-theme #sticky-cursor-inner.is-plus::before,
   body.light-theme #sticky-cursor-inner.is-plus::after {
     background-color: #000000 !important;
-    mix-blend-mode: normal !important;
   }
   body.light-theme #sticky-cursor-inner.is-plus {
     background-color: transparent !important;

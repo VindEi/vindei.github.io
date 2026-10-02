@@ -1,17 +1,11 @@
-/* --- LAYOUT & COSMETIC CONFIG --- */
 body,
 html {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: "Courier New", Courier, monospace;
-  
-  /* OVERHAUL: Replaced swamp-green background with deep, pure terminal black */
-  background: #050705; 
-  
-  /* OVERHAUL: Replaced muddy algae green with crisp, high-intensity phosphor emerald */
-  color: #39d353; 
-  
+  background: #050705;
+  color: #39d353;
   overflow: hidden;
 }
 
@@ -26,13 +20,12 @@ html {
   position: relative;
   z-index: 2;
   box-sizing: border-box;
+  animation: jitter 4s infinite;
 }
 
-/* --- TEXT ELEMENTS --- */
 .terminal-wrapper {
   position: relative;
   z-index: 10;
-  
   text-shadow: 0 0 6px rgba(57, 211, 83, 0.4);
 }
 
@@ -41,13 +34,11 @@ html {
   font-size: 1.1rem;
   line-height: 1.6;
   margin-bottom: 0.5rem;
-  opacity: 0; /* Hidden initially for typing anim */
+  opacity: 0;
 }
 
 .error-top-box {
   display: inline-block;
-  
-  /* OVERHAUL: Crisp phosphor border and box-shadow overrides */
   border: 2px solid #39d353;
   padding: 0.4rem 1rem;
   margin-bottom: 2rem;
@@ -65,12 +56,11 @@ html {
 .blinking-cursor {
   display: inline-block;
   font-weight: bold;
-  color: #39d353; /* Replaced algae color on cursor */
+  color: #39d353;
   animation: blink 1s step-end infinite;
-  opacity: 0; /* Hidden until typing starts */
+  opacity: 0;
 }
 
-/* --- CRT EFFECTS (Scanlines & Vignette) --- */
 .crt-overlay {
   position: absolute;
   top: 0;
@@ -79,10 +69,8 @@ html {
   height: 100%;
   pointer-events: none;
   z-index: 5;
-  background: 
-    /* Scanlines */
+  background:
     linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-    /* Vignette */
     radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6) 100%);
   background-size:
     100% 4px,
@@ -90,7 +78,6 @@ html {
   animation: flicker 0.15s infinite;
 }
 
-/* --- ANIMATIONS --- */
 @keyframes blink {
   0%,
   100% {
@@ -113,35 +100,26 @@ html {
   }
 }
 
-/* Glitch Effect on Entry */
-.bsod-container {
-  animation: jitter 4s infinite;
-}
-
 @keyframes jitter {
   0%,
   90%,
   100% {
     transform: none;
-    filter: blur(0);
   }
   92% {
     transform: translateX(2px);
-    filter: blur(1px);
   }
   94% {
     transform: translateX(-2px);
   }
   96% {
     transform: translateX(1px);
-    filter: blur(0.5px);
   }
   98% {
     transform: none;
   }
 }
 
-/* Mobile Adjustments */
 @media (max-width: 768px) {
   .bsod-container {
     padding: 20px;

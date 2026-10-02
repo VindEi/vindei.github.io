@@ -1,8 +1,6 @@
 <section class="intro data-page">
-  <div class="Encrypt-grid">
-    <!-- LEFT: WORKSPACE -->
-    <div class="Encrypt-main-card">
-      <!-- CREATE VIEW -->
+  <div class="encrypt-grid">
+    <div class="encrypt-main-card">
       <div id="create-section">
         <div class="field-block">
           <label class="tag-pill platform">Content</label>
@@ -14,8 +12,8 @@
           ></textarea>
         </div>
 
-        <div class="Encrypt-options-row">
-          <div class="field-block" style="flex: 1">
+        <div class="encrypt-options-row">
+          <div class="field-block field-full">
             <label class="tag-pill type">Password</label>
             <div class="input-action-group">
               <input
@@ -45,40 +43,26 @@
 
         <button
           id="encrypt-btn"
-          class="btn-action primary hover-target"
-          style="width: 100%; justify-content: center; margin-top: 10px"
+          class="btn-action primary hover-target btn-full-width"
+          type="button"
         >
           Generate Secure Link
         </button>
       </div>
 
-      <!-- DECRYPT VIEW -->
-      <div id="decrypt-section" style="display: none; position: relative">
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-          "
-        >
-          <h2 style="margin: 0; font-size: 1.5rem">Secure Fragment</h2>
+      <div id="decrypt-section" class="decrypt-panel is-hidden">
+        <div class="decrypt-header">
+          <h2>Secure Fragment</h2>
           <a
             id="create-new-btn"
             href="/tools/data"
-            class="btn-action hover-target"
-            style="font-size: 0.7rem"
-            >Create New</a
+            class="btn-action hover-target btn-small"
           >
+            Create New
+          </a>
         </div>
 
-        <p
-          style="
-            color: var(--text-dim);
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-          "
-        >
+        <p class="decrypt-desc">
           This URL contains an encrypted message. Enter the password below to
           view the content.
         </p>
@@ -95,47 +79,23 @@
 
         <button
           id="decrypt-btn"
-          class="btn-action primary hover-target"
-          style="width: 100%; justify-content: center; margin-top: 10px"
+          class="btn-action primary hover-target btn-full-width"
+          type="button"
         >
           Unlock Payload
         </button>
 
-        <div
-          style="
-            position: absolute;
-            bottom: -25px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-          "
-        >
-          <p
-            id="decrypt-error"
-            class="error-text"
-            style="display: none; margin: 0; font-size: 0.8rem"
-          >
+        <div class="decrypt-error-container">
+          <p id="decrypt-error" class="error-text is-hidden">
             Invalid password.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: INFORMATION & STATUS -->
-    <div class="Encrypt-side-card">
+    <div class="encrypt-side-card">
       <div class="security-brief">
-        <h3
-          style="
-            font-family: &quot;Oswald&quot;, sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            color: var(--accent-gold);
-            margin-bottom: 15px;
-            text-transform: uppercase;
-          "
-        >
-          Information
-        </h3>
+        <h3 class="security-heading">Information</h3>
         <ul class="spec-list">
           <li>
             <strong>Privacy</strong>
@@ -144,8 +104,8 @@
           </li>
           <li>
             <strong>Permanence</strong>
-            Time does not affect data. As long as you have the URL and Password,
-            the message can be recovered at any time.
+            Time does not affect data. As long as you have the URL and password,
+            the message can be recovered.
           </li>
           <li>
             <strong>Storage</strong>
@@ -159,53 +119,37 @@
         </ul>
       </div>
 
-      <div
-        class="separator"
-        style="margin: 25px 0; height: 1px; background: var(--border-color)"
-      ></div>
+      <div class="section-divider"></div>
 
-      <!-- Result State -->
-      <div id="result-area" class="fade-in" style="display: none">
-        <label class="tag-pill platform" style="margin-bottom: 10px"
-          >Encrypted Link</label
-        >
-        <p
-          style="
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-bottom: 15px;
-            line-height: 1.4;
-          "
-        >
+      <div id="result-area" class="fade-in is-hidden">
+        <label class="tag-pill platform result-pill">Encrypted Link</label>
+        <p class="result-note">
           Copy the link below to share your message securely.
         </p>
         <div class="input-action-group">
           <input
             type="text"
-            id="Encrypt-result"
+            id="encrypt-result"
             readonly
             class="hover-target"
           />
-          <button id="copy-Encrypt-btn" class="btn-action hover-target">
+          <button
+            id="copy-encrypt-btn"
+            class="btn-action hover-target"
+            type="button"
+          >
             Copy
           </button>
         </div>
       </div>
 
-      <!-- Decrypted State -->
-      <div
-        id="decrypted-output-container"
-        class="fade-in"
-        style="display: none"
-      >
-        <label class="tag-pill license" style="margin-bottom: 10px"
-          >Decrypted Content</label
-        >
-        <div id="decrypted-output" class="Encrypt-plaintext-box"></div>
+      <div id="decrypted-output-container" class="fade-in is-hidden">
+        <label class="tag-pill license result-pill">Decrypted Content</label>
+        <div id="decrypted-output" class="encrypt-plaintext-box"></div>
         <button
-          onclick="location.href = '/tools/data'"
-          class="btn-action hover-target"
-          style="margin-top: 20px; width: 100%; justify-content: center"
+          id="close-fragment-btn"
+          class="btn-action hover-target btn-full-width close-btn-spacing"
+          type="button"
         >
           Close Fragment
         </button>

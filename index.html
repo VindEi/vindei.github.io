@@ -7,7 +7,6 @@
 
     <link rel="canonical" href="https://vinde.me/" />
 
-    <!-- Open Graph & Social Embed Meta -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="VindE | Personal Website" />
     <meta
@@ -15,69 +14,52 @@
       content="Personal portfolio featuring Windows software, SnapDNS, client utilities, and games."
     />
     <meta property="og:url" content="https://vinde.me/" />
-    <meta property="og:image" content="https://vinde.me/assets/img/logo.png" />
+    <meta property="og:image" content="https://vinde.me/assets/img/VE.png" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@V1ndEi" />
+    <meta name="twitter:image" content="https://vinde.me/assets/img/VE.png" />
 
-    <!-- CDN Preconnects -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <!-- Core Resource Preloads -->
-    <link rel="preload" href="/assets/css/style.css?v=1.0.1" as="style" />
-    <link rel="preload" href="/assets/js/script.js" as="script" />
-    <link rel="preload" href="/assets/js/router.js" as="script" />
 
     <meta
       name="description"
       content="VindE - Personal Website featuring Windows software, SnapDNS, client utilities, and games."
     />
     <meta name="theme-color" content="#ffc107" />
-    <link rel="icon" type="image/png" href="/assets/img/logo.png" />
 
-    <!-- Global Core Stylesheets -->
-    <link rel="stylesheet" href="/assets/css/style.css?v=1.0.1" />
-    <link rel="stylesheet" href="/assets/css/header.css?v=1.0.1" />
-    <link rel="stylesheet" href="/assets/css/footer.css?v=1.0.1" />
-    <link rel="stylesheet" href="/assets/css/cursor.css?v=1.0.1" />
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/img/favicon.png"
+    />
+    <link rel="apple-touch-icon" href="assets/img/favicon.png" />
 
-    <!-- FontAwesome Async Loader -->
+    <link rel="stylesheet" href="assets/css/style.css?v=1.0.3" />
+    <link rel="stylesheet" href="assets/css/header.css?v=1.0.3" />
+    <link rel="stylesheet" href="assets/css/footer.css?v=1.0.3" />
+    <link rel="stylesheet" href="assets/css/cursor.css?v=1.0.3" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
       integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
       crossorigin="anonymous"
-      media="print"
-      onload="this.media = 'all'"
-      onerror="
-        this.onerror = null;
-        this.href = '/assets/fonts/fa/css/all.min.css';
-      "
       referrerpolicy="no-referrer"
     />
 
-    <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
-      onerror="
-        this.onerror = null;
-        this.href = '/assets/fonts/fonts.css';
-      "
     />
   </head>
   <body>
-    <!-- Top Header -->
-    <div id="header-placeholder" style="opacity: 1">
+    <div id="header-placeholder">
       <header>
         <div class="header-left no-select">
-          <img
-            src="/assets/img/logo.png"
-            alt="VindE Logo"
-            class="logo"
-            width="32"
-            height="32"
-          />
+          <img src="assets/img/logo.svg" alt="VindE Logo" class="logo" />
           <h1>VindE</h1>
         </div>
         <nav class="header-nav">
@@ -104,10 +86,8 @@
       </header>
     </div>
 
-    <!-- SPA Dynamic Viewport -->
     <main id="page-content" class="loaded">
       <div class="home-dashboard">
-        <!-- Hero Section -->
         <section class="dashboard-hero">
           <div class="hero-text-block">
             <h1>VindE</h1>
@@ -127,7 +107,6 @@
           </div>
         </section>
 
-        <!-- Telemetry & Directory Column -->
         <aside id="dashboard-telemetry-target" class="dashboard-telemetry">
           <div class="telemetry-header">
             <div class="header-title">
@@ -160,7 +139,6 @@
             <span class="git-sq off"></span>
           </div>
 
-          <!-- Section 1: Tools Sub-Pages -->
           <div class="telemetry-section">
             <span class="section-label">Tools</span>
             <div class="telemetry-rows">
@@ -181,7 +159,6 @@
 
           <div class="metrics-separator"></div>
 
-          <!-- Section 2: Hub Sub-Pages -->
           <div class="telemetry-section">
             <span class="section-label">Hub</span>
             <div class="telemetry-rows">
@@ -200,7 +177,6 @@
 
           <div class="metrics-separator"></div>
 
-          <!-- Section 3: Communication Channels -->
           <div class="telemetry-section">
             <span class="section-label">Social</span>
             <div class="telemetry-rows">
@@ -248,11 +224,10 @@
       </div>
     </main>
 
-    <!-- Persistent Footer Component -->
-    <div id="footer-placeholder" style="opacity: 1; display: none">
+    <div id="footer-placeholder" class="is-hidden">
       <footer>
         <div class="footer-container">
-          <div class="footer-left" style="gap: 10px">
+          <div class="footer-left">
             <a
               href="/tools"
               class="tools-btn hover-target"
@@ -313,9 +288,8 @@
       </footer>
     </div>
 
-    <!-- Scripts -->
-    <script src="/assets/js/script.js" defer></script>
-    <script src="/assets/js/router.js" defer></script>
-    <script src="/assets/js/cursor.js" defer></script>
+    <script src="assets/js/script.js" defer></script>
+    <script src="assets/js/router.js" defer></script>
+    <script src="assets/js/cursor.js" defer></script>
   </body>
 </html>

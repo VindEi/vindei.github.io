@@ -1,6 +1,5 @@
 <section class="intro echo-container">
-  <div style="max-width: 1150px; margin: 0 auto; width: 100%">
-    <!-- HEADER -->
+  <div class="echo-content-wrap">
     <div class="echo-header-row">
       <div class="echo-title-group">
         <p class="accent-tag">SYSTEM ECHO</p>
@@ -9,21 +8,22 @@
       <button
         id="refresh-echo"
         class="btn-refresh hover-target"
+        type="button"
         aria-label="Refresh Network Data"
       >
         <i class="fas fa-sync-alt" id="refresh-icon"></i>
       </button>
     </div>
 
-    <!-- IP DISPLAY -->
     <div>
       <div class="ip-display-row">
-        <h1 id="user-ip"><span style="opacity: 0.2">INITIALIZING...</span></h1>
+        <h1 id="user-ip"><span class="ip-loading">INITIALIZING...</span></h1>
         <img id="user-flag" src="" alt="Country Flag" />
-        <div style="display: flex; align-items: center; gap: 12px">
+        <div class="ip-actions">
           <button
             id="copy-ip-btn"
             class="copy-btn hover-target"
+            type="button"
             aria-label="Copy IP Address"
           >
             <i class="fas fa-copy"></i>
@@ -34,37 +34,27 @@
       <p id="user-isp">Establishing secure race...</p>
     </div>
 
-    <!-- GRID -->
     <div class="echo-main-grid">
-      <!-- INFO COLUMNS -->
-      <div style="display: flex; flex-direction: column; gap: 2.5rem">
-        <!-- NETWORK -->
+      <div class="echo-columns">
         <div>
           <h2 class="section-title">[ NETWORK ]</h2>
-          <div
-            class="features-grid"
-            style="
-              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-              margin: 0;
-              gap: 1rem;
-            "
-          >
-            <div class="feature-card" style="min-height: 110px">
+          <div class="echo-card-grid">
+            <div class="echo-feature-card">
               <i class="fas fa-map-marker-alt"></i>
               <h3>Location</h3>
               <p id="user-loc">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-building"></i>
               <h3>Organization</h3>
               <p id="user-org">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-link"></i>
               <h3>Domain</h3>
               <p id="user-domain">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-network-wired"></i>
               <h3>ASN</h3>
               <p id="user-asn">---</p>
@@ -72,50 +62,38 @@
           </div>
         </div>
 
-        <!-- HARDWARE -->
         <div>
           <h2 class="section-title">[ HARDWARE ]</h2>
-          <div
-            class="features-grid"
-            style="
-              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-              margin: 0;
-              gap: 1rem;
-            "
-          >
-            <div class="feature-card" style="min-height: 110px">
+          <div class="echo-card-grid">
+            <div class="echo-feature-card">
               <i class="fas fa-microchip"></i>
               <h3>
                 Processing
-                <a
-                  href="#kb"
-                  style="color: var(--accent-gold); text-decoration: none"
-                  >(?)</a
-                >
+                <a href="#kb" class="kb-link">(?)</a>
               </h3>
               <p id="user-hw">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-video"></i>
               <h3>Graphics</h3>
               <p id="user-gpu">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-expand"></i>
               <h3>Native Res</h3>
               <p id="user-res">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-palette"></i>
               <h3>Color Gamut</h3>
               <p id="user-gamut">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-fingerprint"></i>
               <h3>Touch</h3>
               <p id="user-touch">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-bolt"></i>
               <h3>Latency</h3>
               <p id="user-latency">---</p>
@@ -123,91 +101,52 @@
           </div>
         </div>
 
-        <!-- BROWSER -->
         <div>
           <h2 class="section-title">[ BROWSER ]</h2>
-          <div
-            class="features-grid"
-            style="
-              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-              margin: 0;
-              gap: 1rem;
-            "
-          >
-            <div class="feature-card" style="min-height: 110px">
+          <div class="echo-card-grid">
+            <div class="echo-feature-card">
               <i class="fas fa-desktop"></i>
               <h3>Platform</h3>
               <p id="user-os">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-ad"></i>
               <h3>Adblocker</h3>
               <p id="user-adblock">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-robot"></i>
               <h3>Bot Status</h3>
               <p id="user-bot">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-moon"></i>
               <h3>Theme</h3>
               <p id="user-sys-theme">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-th-large"></i>
               <h3>Window</h3>
               <p id="user-win-state">---</p>
             </div>
-            <div class="feature-card" style="min-height: 110px">
+            <div class="echo-feature-card">
               <i class="fas fa-memory"></i>
               <h3>
                 Memory
-                <a
-                  href="#kb"
-                  style="color: var(--accent-gold); text-decoration: none"
-                  >(?)</a
-                >
+                <a href="#kb" class="kb-link">(?)</a>
               </h3>
               <p id="user-ram">---</p>
             </div>
           </div>
         </div>
 
-        <details
-          style="
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            padding: 10px;
-          "
-        >
-          <summary
-            style="
-              font-family: &quot;Oswald&quot;, sans-serif;
-              font-size: 0.8rem;
-              color: var(--text-dim);
-              letter-spacing: 1px;
-            "
-          >
-            VIEW_RAW_USER_AGENT
-          </summary>
-          <code
-            id="user-ua"
-            style="
-              display: block;
-              margin-top: 10px;
-              font-size: 0.75rem;
-              color: var(--accent-gold);
-              word-break: break-all;
-            "
-            >---</code
-          >
+        <details class="ua-details">
+          <summary class="ua-summary">VIEW_RAW_USER_AGENT</summary>
+          <code id="user-ua" class="ua-code">---</code>
         </details>
       </div>
 
-      <!-- MAP SECTION -->
-      <div style="display: flex; flex-direction: column">
+      <div class="map-column">
         <h2 class="section-title">[ GEOLOCATION ]</h2>
         <div id="map"></div>
 
@@ -218,44 +157,26 @@
           </details>
         </div>
 
-        <div
-          class="feature-card"
-          style="
-            margin-top: 20px;
-            min-height: auto;
-            padding: 1.2rem;
-            border-color: var(--accent-red);
-          "
-        >
+        <div class="echo-feature-card speedtest-card">
           <i class="fas fa-tachometer-alt"></i>
-          <h3 style="display: inline; margin-left: 10px">Network Speed</h3>
-          <p style="margin-top: 10px">
+          <h3 class="speedtest-title">Network Speed</h3>
+          <p class="speedtest-link-wrap">
             <a
               href="https://speedtest.net"
               target="_blank"
               rel="noopener noreferrer"
-              style="color: var(--accent-gold); text-decoration: underline"
-              >Launch Speedtest.net &nearr;</a
+              class="speedtest-link"
             >
+              Launch Speedtest.net &nearr;
+            </a>
           </p>
         </div>
       </div>
     </div>
 
-    <!-- KNOWLEDGE BASE -->
     <div id="kb" class="kb-section">
-      <h2
-        style="
-          font-family: &quot;Oswald&quot;, sans-serif;
-          color: var(--accent-gold);
-          margin-bottom: 2rem;
-        "
-      >
-        [ KNOWLEDGE_BASE & DISCLAIMERS ]
-      </h2>
-      <p
-        style="color: var(--accent-red); font-weight: bold; margin-bottom: 2rem"
-      >
+      <h2 class="kb-heading">[ KNOWLEDGE_BASE & DISCLAIMERS ]</h2>
+      <p class="kb-notice">
         NOTICE: SOME DATA MAY BE MASKED BY BROWSER SHIELDS OR ISP ROUTING.
       </p>
       <div class="kb-grid">
@@ -271,15 +192,15 @@
           <h4>How accurate is geolocation?</h4>
           <p>
             IP-based geolocation identifies the location of your ISP's
-            datacenter. Behind <strong>CGNAT</strong> or VPNs, the reported city
-            may be far from your actual location.
+            datacenter. Behind CGNAT or VPNs, the reported city may differ from
+            physical position.
           </p>
         </div>
         <div class="kb-item">
           <h4>Adblock Detection</h4>
           <p>
             Strict browsers handle adblocking natively. We probe common ad
-            domains; if the request fails, we assume filtering is active.
+            domains; if the request fails, filtering is assumed active.
           </p>
         </div>
       </div>

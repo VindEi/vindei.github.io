@@ -1,12 +1,14 @@
-/* =========================================
-   SYSTEM ECHO TELEMETRY STYLES
-   ========================================= */
-
 .echo-container {
-  height: auto !important;
+  height: auto;
   min-height: 100vh;
   padding-top: 40px;
   margin-top: -60px;
+}
+
+.echo-content-wrap {
+  max-width: 1150px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .echo-header-row {
@@ -50,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .btn-refresh:hover {
@@ -65,6 +67,16 @@
   gap: 15px;
   flex-wrap: wrap;
   position: relative;
+}
+
+.ip-loading {
+  opacity: 0.2;
+}
+
+.ip-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 #user-ip {
@@ -97,7 +109,7 @@
   border-radius: 8px;
   cursor: pointer;
   display: none;
-  transition: 0.2s;
+  transition: 0.2s ease;
 }
 
 .copy-btn:hover {
@@ -109,7 +121,7 @@
   color: #4caf50;
   font-size: 0.8rem;
   opacity: 0;
-  transition: 0.3s;
+  transition: opacity 0.3s ease;
   font-family: "Oswald", sans-serif;
   white-space: nowrap;
 }
@@ -121,6 +133,12 @@
   align-items: start;
 }
 
+.echo-columns {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
 .section-title {
   font-size: 0.9rem;
   color: var(--accent-red);
@@ -130,14 +148,14 @@
   font-weight: bold;
 }
 
-/* --- CARD & FEATURE GRID DEFINITIONS (Restores layout) --- */
-.features-grid {
+.echo-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin: 0;
   gap: 1rem;
 }
 
-.feature-card {
+.echo-feature-card {
   background: var(--surface);
   padding: 1.2rem;
   border-radius: 8px;
@@ -146,44 +164,73 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  min-height: 110px;
   transition:
-    transform 0.2s,
-    border-color 0.2s,
-    background-color 0.2s;
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
-.feature-card:hover {
+.echo-feature-card:hover {
   transform: translateY(-2px);
   border-color: var(--accent-gold);
 }
 
-body.light-theme .feature-card {
-  background: var(--surface);
+body.light-theme .echo-feature-card:hover {
+  background: #ffffff;
 }
 
-body.light-theme .feature-card:hover {
-  background: #ffffff !important;
-}
-
-.feature-card i {
+.echo-feature-card i {
   font-size: 1.3rem;
   color: var(--accent-gold);
   margin-bottom: 0.75rem;
 }
 
-.feature-card h3 {
+.echo-feature-card h3 {
   font-size: 0.95rem;
   margin: 0 0 0.5rem 0;
   color: var(--text);
   line-height: 1.2;
 }
 
-.feature-card p {
+.echo-feature-card p {
   margin: 0;
   color: var(--text-dim);
   line-height: 1.4;
   font-size: 0.85rem;
   word-break: break-word;
+}
+
+.kb-link {
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+
+.ua-details {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.ua-summary {
+  font-family: "Oswald", sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+.ua-code {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  word-break: break-all;
+}
+
+.map-column {
+  display: flex;
+  flex-direction: column;
 }
 
 #map {
@@ -196,7 +243,26 @@ body.light-theme .feature-card:hover {
   z-index: 1;
 }
 
-/* --- NETWORK LOG STYLES --- */
+.speedtest-card {
+  margin-top: 20px;
+  min-height: auto;
+  border-color: var(--accent-red);
+}
+
+.speedtest-title {
+  display: inline;
+  margin-left: 10px;
+}
+
+.speedtest-link-wrap {
+  margin-top: 10px;
+}
+
+.speedtest-link {
+  color: var(--accent-gold);
+  text-decoration: underline;
+}
+
 .network-log-container {
   margin-top: 10px;
   text-align: right;
@@ -214,7 +280,7 @@ summary#api-source-summary {
   font-family: "Oswald", sans-serif;
   font-size: 0.75rem;
   color: var(--text-dim);
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 summary#api-source-summary:hover {
@@ -278,6 +344,18 @@ summary#api-source-summary::-webkit-details-marker {
   border-top: 1px solid var(--border-color);
   padding-top: 3rem;
   margin-bottom: 5rem;
+}
+
+.kb-heading {
+  font-family: "Oswald", sans-serif;
+  color: var(--accent-gold);
+  margin-bottom: 2rem;
+}
+
+.kb-notice {
+  color: var(--accent-red);
+  font-weight: bold;
+  margin-bottom: 2rem;
 }
 
 .kb-grid {

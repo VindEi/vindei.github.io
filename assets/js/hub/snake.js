@@ -1,7 +1,3 @@
-/**
- * VindE - Snake Game Engine
- */
-
 (function () {
   "use strict";
 
@@ -9,6 +5,7 @@
   let loopTimeout = null;
   let isRunning = false;
   let isPaused = false;
+  let hasTurnedThisTick = false;
 
   const GRID_SIZE = 20;
   const CELL_COUNT = 20;
@@ -18,15 +15,22 @@
   let dir = { x: 1, y: 0 };
   let nextDir = { x: 1, y: 0 };
   let score = 0;
-  let bestScore = parseInt(localStorage.getItem("vinde_snake_best") || "0", 10);
+  let bestScore = 0;
   let tickRate = 110;
+
+  try {
+    bestScore = parseInt(localStorage.getItem("vinde_snake_best") || "0", 10);
+  } catch (e) {
+    bestScore = 0;
+  }
 
   function initEngine() {
     canvas = document.getElementById("snake-canvas");
     if (!canvas) return;
     ctx = canvas.getContext("2d");
 
-    document.getElementById("snake-best").innerText = bestScore;
+    const bestEl = document.getElementById("snake-best");
+    if (bestEl) bestEl.innerText = bestScore;
 
     bindEvents();
     render();
@@ -55,8 +59,10 @@
     ];
     dir = { x: 1, y: 0 };
     nextDir = { x: 1, y: 0 };
+    hasTurnedThisTick = false;
     score = 0;
-    document.getElementById("snake-score").innerText = "0";
+    const scoreEl = document.getElementById("snake-score");
+    if (scoreEl) scoreEl.innerText = "0";
     spawnFood();
   }
 
@@ -75,9 +81,9 @@
     if (!isRunning || isPaused) return;
 
     dir = { ...nextDir };
+    hasTurnedThisTick = false;
     const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
 
-    // Wall collision
     if (
       head.x < 0 ||
       head.x >= CELL_COUNT ||
@@ -88,7 +94,6 @@
       return;
     }
 
-    // Tail collision
     if (snake.some((seg) => seg.x === head.x && seg.y === head.y)) {
       triggerGameOver("You ran into yourself!");
       return;
@@ -96,14 +101,18 @@
 
     snake.unshift(head);
 
-    // Food collision
     if (head.x === food.x && head.y === food.y) {
       score += 10;
-      document.getElementById("snake-score").innerText = score;
+      const scoreEl = document.getElementById("snake-score");
+      if (scoreEl) scoreEl.innerText = score;
+
       if (score > bestScore) {
         bestScore = score;
-        localStorage.setItem("vinde_snake_best", bestScore.toString());
-        document.getElementById("snake-best").innerText = bestScore;
+        try {
+          localStorage.setItem("vinde_snake_best", bestScore.toString());
+        } catch (e) {}
+        const bestEl = document.getElementById("snake-best");
+        if (bestEl) bestEl.innerText = bestScore;
       }
       spawnFood();
     } else {
@@ -135,28 +144,23 @@
       ctx.stroke();
     }
 
-    // Food
     ctx.fillStyle = "#ff3b5c";
-    ctx.shadowColor = "#ff3b5c";
-    ctx.shadowBlur = 8;
     ctx.fillRect(
       food.x * GRID_SIZE + 3,
       food.y * GRID_SIZE + 3,
       GRID_SIZE - 6,
       GRID_SIZE - 6,
     );
-    ctx.shadowBlur = 0;
 
-    // Snake
     snake.forEach((seg, index) => {
-      if (index === 0) {
-        ctx.fillStyle = isLight ? "#ffb300" : "#ffc107";
-        ctx.shadowColor = "rgba(255, 193, 7, 0.4)";
-        ctx.shadowBlur = 6;
-      } else {
-        ctx.fillStyle = isLight ? "#11131a" : "#f4f5f8";
-        ctx.shadowBlur = 0;
-      }
+      ctx.fillStyle =
+        index === 0
+          ? isLight
+            ? "#ffb300"
+            : "#ffc107"
+          : isLight
+            ? "#11131a"
+            : "#f4f5f8";
       ctx.fillRect(
         seg.x * GRID_SIZE + 1,
         seg.y * GRID_SIZE + 1,
@@ -190,12 +194,14 @@
     if (!isRunning) {
       startGame();
     }
+    if (hasTurnedThisTick) return;
     if (newX !== 0 && dir.x === -newX) return;
     if (newY !== 0 && dir.y === -newY) return;
+
     nextDir = { x: newX, y: newY };
+    hasTurnedThisTick = true;
   }
 
-  // Global Keydown Handler (Robust WASD + Arrows)
   const handleKeyDown = (e) => {
     if (!document.getElementById("snake-canvas")) return;
 
@@ -225,24 +231,17 @@
       e.preventDefault();
     }
 
-    if (isUp) {
-      handleDirectionInput(0, -1);
-    } else if (isDown) {
-      handleDirectionInput(0, 1);
-    } else if (isLeft) {
-      handleDirectionInput(-1, 0);
-    } else if (isRight) {
-      handleDirectionInput(1, 0);
-    } else if (isSpace) {
-      togglePause();
-    }
+    if (isUp) handleDirectionInput(0, -1);
+    else if (isDown) handleDirectionInput(0, 1);
+    else if (isLeft) handleDirectionInput(-1, 0);
+    else if (isRight) handleDirectionInput(1, 0);
+    else if (isSpace) togglePause();
   };
 
   function bindEvents() {
     window.removeEventListener("keydown", handleKeyDown);
     window.addEventListener("keydown", handleKeyDown);
 
-    // Mobile Virtual D-Pad
     document.querySelectorAll(".dpad-btn").forEach((btn) => {
       btn.onclick = (e) => {
         e.preventDefault();
@@ -255,7 +254,6 @@
       };
     });
 
-    // Touch Swipe
     let touchStartX = 0,
       touchStartY = 0;
     canvas.addEventListener(
@@ -282,7 +280,6 @@
       { passive: true },
     );
 
-    // Difficulty buttons
     document.querySelectorAll(".speed-btn").forEach((btn) => {
       btn.onclick = () => {
         btn.blur();
@@ -296,7 +293,7 @@
 
     const actionBtn = document.getElementById("snake-action-btn");
     if (actionBtn) {
-      actionBtn.onclick = (e) => {
+      actionBtn.onclick = () => {
         actionBtn.blur();
         startGame();
       };
@@ -304,7 +301,7 @@
 
     const pauseBtn = document.getElementById("snake-pause-btn");
     if (pauseBtn) {
-      pauseBtn.onclick = (e) => {
+      pauseBtn.onclick = () => {
         pauseBtn.blur();
         togglePause();
       };
@@ -332,7 +329,6 @@
     }
   }
 
-  // SPA Lifecycle Cleanup
   const cleanUp = () => {
     if (!document.getElementById("snake-canvas")) {
       clearTimeout(loopTimeout);
@@ -344,5 +340,5 @@
   document.addEventListener("spa-content-loaded", cleanUp);
 
   document.addEventListener("spa-content-loaded", initEngine);
-  document.addEventListener("DOMContentLoaded", initEngine);
+  initEngine();
 })();

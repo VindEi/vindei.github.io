@@ -5,6 +5,8 @@
     </a>
   </div>
 
+  <div id="rng-notice" class="rng-notice is-hidden" role="alert"></div>
+
   <div class="rng-tab-header">
     <button
       id="tab-btn-generator"
@@ -18,7 +20,6 @@
     </button>
   </div>
 
-  <!-- VIEW 1: Number Generator (Default: 1 to 3) -->
   <div id="rng-generator-view" class="rng-view active">
     <div class="rng-grid">
       <div class="panel-card rng-main-card">
@@ -40,7 +41,7 @@
         <h3>Range</h3>
         <div class="bounds-form">
           <div class="field-block">
-            <label>Min</label>
+            <label for="rng-min">Min</label>
             <input
               type="number"
               id="rng-min"
@@ -50,7 +51,7 @@
             />
           </div>
           <div class="field-block">
-            <label>Max</label>
+            <label for="rng-max">Max</label>
             <input
               type="number"
               id="rng-max"
@@ -61,16 +62,8 @@
           </div>
         </div>
 
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-          "
-        >
-          <h3 style="margin: 0">History</h3>
+        <div class="history-header">
+          <h3>History</h3>
           <button
             id="clear-rng-history-btn"
             class="clear-history-link hover-target"
@@ -86,7 +79,6 @@
     </div>
   </div>
 
-  <!-- VIEW 2: Wheel Spinner (Default: 1, 2, 3) -->
   <div id="rng-spinner-view" class="rng-view">
     <div class="spinner-grid">
       <div class="panel-card spinner-canvas-card">
@@ -130,16 +122,8 @@
 
         <div id="slice-list" class="slice-list-container"></div>
 
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-          "
-        >
-          <h3 style="margin: 0">History</h3>
+        <div class="history-header">
+          <h3>History</h3>
           <button
             id="clear-wheel-history-btn"
             class="clear-history-link hover-target"

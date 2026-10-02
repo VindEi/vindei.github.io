@@ -24,16 +24,15 @@ footer:hover {
   align-items: center;
 }
 
-/* LEFT SIDE: Tools & Hub icons */
 .footer-left {
   display: flex;
+  align-items: center;
   justify-content: flex-start;
+  gap: 10px;
 }
 
 .tools-btn,
-.hub-btn,
-.echo-btn,
-.data-btn {
+.hub-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -42,15 +41,17 @@ footer:hover {
   color: var(--text);
   text-decoration: none;
   opacity: 0.4;
-  transition: all 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
   border: 1px solid transparent;
   border-radius: 50%;
 }
 
 .tools-btn:hover,
-.hub-btn:hover,
-.echo-btn:hover,
-.data-btn:hover {
+.hub-btn:hover {
   opacity: 1;
   color: var(--accent-gold);
   background: rgba(255, 193, 7, 0.05);
@@ -58,9 +59,7 @@ footer:hover {
 }
 
 .tools-btn.active,
-.hub-btn.active,
-.echo-btn.active,
-.data-btn.active {
+.hub-btn.active {
   opacity: 1 !important;
   color: var(--accent-gold) !important;
   background: rgba(255, 193, 7, 0.1);
@@ -73,16 +72,15 @@ footer:hover {
   font-size: 1rem;
 }
 
-/* CENTER SIDE */
 .footer-center {
   text-align: center;
 }
+
 .footer-center p {
   margin: 0;
   white-space: nowrap;
 }
 
-/* RIGHT SIDE: Socials */
 .footer-right {
   display: flex;
   justify-content: flex-end;

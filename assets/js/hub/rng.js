@@ -1,13 +1,15 @@
-/**
- * VindE - Number Generator & Choice Wheel
- */
-
 (function () {
   "use strict";
 
-  /* ==========================================================================
-     PER-DAY HISTORY ENGINE
-     ========================================================================== */
+  function showNotice(msg) {
+    const el = document.getElementById("rng-notice");
+    if (!el) return;
+    el.innerText = msg;
+    el.classList.remove("is-hidden");
+    setTimeout(() => {
+      el.classList.add("is-hidden");
+    }, 3500);
+  }
 
   function getTodayKey() {
     const d = new Date();
@@ -48,7 +50,9 @@
       delete hist[keys[keys.length - 1]];
     }
 
-    localStorage.setItem(storageKey, JSON.stringify(hist));
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(hist));
+    } catch (err) {}
   }
 
   function renderDailyHistory(containerId, storageKey) {
@@ -64,7 +68,8 @@
 
     const dates = Object.keys(hist).sort().reverse();
     if (dates.length === 0 || dates.every((d) => hist[d].length === 0)) {
-      container.innerHTML = `<span class="history-empty">No history recorded yet.</span>`;
+      container.innerHTML =
+        '<span class="history-empty">No history recorded yet.</span>';
       return;
     }
 
@@ -95,10 +100,6 @@
     });
   }
 
-  /* ==========================================================================
-     MODULE 1: NUMBER GENERATOR
-     ========================================================================== */
-
   function getSecureRandomInt(min, max) {
     const range = max - min + 1;
     const maxUint32 = 0xffffffff;
@@ -121,17 +122,24 @@
 
     if (clearBtn) {
       clearBtn.onclick = () => {
-        localStorage.removeItem("vinde_rng_daily_history");
+        try {
+          localStorage.removeItem("vinde_rng_daily_history");
+        } catch (e) {}
         renderDailyHistory("rng-history", "vinde_rng_daily_history");
       };
     }
 
     rollBtn.onclick = () => {
-      const min = parseInt(document.getElementById("rng-min").value, 10) || 1;
-      const max = parseInt(document.getElementById("rng-max").value, 10) || 3;
+      const min = parseInt(document.getElementById("rng-min").value, 10);
+      const max = parseInt(document.getElementById("rng-max").value, 10);
+
+      if (isNaN(min) || isNaN(max)) {
+        showNotice("Please enter valid numbers for Min and Max.");
+        return;
+      }
 
       if (min >= max) {
-        alert("Min must be less than Max.");
+        showNotice("Min bound must be strictly less than Max bound.");
         return;
       }
 
@@ -154,10 +162,6 @@
     };
   }
 
-  /* ==========================================================================
-     MODULE 2: WHEEL SPINNER (Default 1, 2, 3)
-     ========================================================================== */
-
   let canvas, ctx;
   let slices = ["1", "2", "3"];
   let currentAngle = 0;
@@ -173,7 +177,6 @@
     "#161924",
     "#222838",
   ];
-
   const paletteLight = [
     "#ffffff",
     "#f0f2f7",
@@ -207,22 +210,27 @@
     const clearWheelBtn = document.getElementById("clear-wheel-history-btn");
     if (clearWheelBtn) {
       clearWheelBtn.onclick = () => {
-        localStorage.removeItem("vinde_wheel_daily_history");
+        try {
+          localStorage.removeItem("vinde_wheel_daily_history");
+        } catch (e) {}
         renderDailyHistory("wheel-history", "vinde_wheel_daily_history");
       };
     }
 
     const spinBtn = document.getElementById("wheel-spin-btn");
-    spinBtn.onclick = () => {
-      if (isSpinning || slices.length < 2) return;
-      isSpinning = true;
-      spinBtn.disabled = true;
-      winningIndex = null;
-      document.getElementById("wheel-result-banner").innerText = "Spinning...";
+    if (spinBtn) {
+      spinBtn.onclick = () => {
+        if (isSpinning || slices.length < 2) return;
+        isSpinning = true;
+        spinBtn.disabled = true;
+        winningIndex = null;
+        document.getElementById("wheel-result-banner").innerText =
+          "Spinning...";
 
-      angularVelocity = Math.random() * 0.2 + 0.32;
-      requestAnimationFrame(spinAnimationLoop);
-    };
+        angularVelocity = Math.random() * 0.2 + 0.32;
+        requestAnimationFrame(spinAnimationLoop);
+      };
+    }
 
     window.addEventListener("resize", () => {
       if (document.getElementById("wheel-canvas")) {
@@ -242,7 +250,8 @@
       requestAnimationFrame(spinAnimationLoop);
     } else {
       isSpinning = false;
-      document.getElementById("wheel-spin-btn").disabled = false;
+      const spinBtn = document.getElementById("wheel-spin-btn");
+      if (spinBtn) spinBtn.disabled = false;
       evaluateWinner();
       drawWheel();
     }
@@ -334,6 +343,7 @@
     const list = document.getElementById("slice-list");
     const input = document.getElementById("slice-input");
     const addBtn = document.getElementById("slice-add-btn");
+    if (!list || !input || !addBtn) return;
 
     const renderList = () => {
       list.innerHTML = "";
@@ -350,7 +360,7 @@
       list.querySelectorAll(".slice-del-btn").forEach((b) => {
         b.onclick = () => {
           if (slices.length <= 2) {
-            alert("Need at least 2 options.");
+            showNotice("At least 2 choices are required.");
             return;
           }
           slices.splice(parseInt(b.dataset.idx, 10), 1);
@@ -365,7 +375,7 @@
       const val = input.value.trim();
       if (!val) return;
       if (slices.length >= 16) {
-        alert("Maximum 16 options.");
+        showNotice("Maximum 16 options allowed.");
         return;
       }
       slices.push(val);
@@ -388,7 +398,7 @@
     const viewGen = document.getElementById("rng-generator-view");
     const viewSpin = document.getElementById("rng-spinner-view");
 
-    if (!tabGen || !tabSpin) return;
+    if (!tabGen || !tabSpin || !viewGen || !viewSpin) return;
 
     tabGen.onclick = () => {
       tabGen.classList.add("active");
@@ -414,5 +424,5 @@
   }
 
   document.addEventListener("spa-content-loaded", initModule);
-  document.addEventListener("DOMContentLoaded", initModule);
+  initModule();
 })();

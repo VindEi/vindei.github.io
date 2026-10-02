@@ -1,7 +1,3 @@
-/**
- * VindE - System Echo Module
- */
-
 (function () {
   "use strict";
 
@@ -19,9 +15,7 @@
       } else if (el.innerText === "---" || el.innerText === "PROBING...") {
         el.innerText = "---";
       }
-    } catch (e) {
-      // Suppress minor update errors
-    }
+    } catch (e) {}
   };
 
   const isMissing = (str) => {
@@ -80,7 +74,7 @@
         "pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads text-ads ad-placement ad-placeholder";
       bait.setAttribute(
         "style",
-        "width: 1px !important; height: 1px !important; position: absolute !important; left: -10000px !important; top: -10000px !important;",
+        "width:1px!important;height:1px!important;position:absolute!important;left:-10000px!important;top:-10000px!important;",
       );
       document.body.appendChild(bait);
 
@@ -119,7 +113,6 @@
 
     if (refreshIcon) refreshIcon.classList.add("fa-spin");
     ipEl.innerText = "CONNECTING...";
-    ipEl.style.color = "var(--text)";
     ispEl.innerText = "Establishing secure race...";
     if (logSummary) logSummary.innerText = "RACING APIs...";
     if (logList) logList.innerHTML = "";
@@ -129,7 +122,7 @@
     const richProviders = [
       {
         name: "geojs.io",
-        url: `https://get.geojs.io/v1/ip/geo.json`,
+        url: "https://get.geojs.io/v1/ip/geo.json",
         parse: (j) => ({
           ip: j.ip,
           isp: j.organization_name || j.organization,
@@ -148,7 +141,7 @@
       },
       {
         name: "ipwho.is",
-        url: `https://ipwho.is/`,
+        url: "https://ipwho.is/",
         parse: (j) => {
           if (!j.success) throw new Error("API Limit");
           return {
@@ -168,7 +161,7 @@
       },
       {
         name: "freeipapi.com",
-        url: `https://free.freeipapi.com/api/json`,
+        url: "https://free.freeipapi.com/api/json",
         parse: (j) => ({
           ip: j.ipAddress,
           isp: j.asnOrganization || "Resolved Network",
@@ -187,7 +180,7 @@
       },
       {
         name: "ipapi.co",
-        url: `https://ipapi.co/json/`,
+        url: "https://ipapi.co/json/",
         parse: (j) => ({
           ip: j.ip,
           isp: j.org,
@@ -249,7 +242,7 @@
       }
     } catch (aggError) {
       try {
-        const fbRes = await fetch(`https://api.ipify.org/?format=json`);
+        const fbRes = await fetch("https://api.ipify.org/?format=json");
         const fbJson = await fbRes.json();
         const fbData = {
           ip: fbJson.ip,
@@ -363,7 +356,6 @@
     );
 
     ipEl.innerText = data.ip;
-    ipEl.style.color = "var(--accent-gold)";
     ispEl.innerText = data.isp;
 
     safeSet("user-loc", () =>
@@ -404,8 +396,17 @@
   };
 
   const updateMap = (lat, lon) => {
-    if (!document.getElementById("map") || typeof L === "undefined") return;
-    if (echoMap) echoMap.remove();
+    const mapEl = document.getElementById("map");
+    if (!mapEl || typeof L === "undefined") return;
+
+    if (echoMap) {
+      echoMap.remove();
+      echoMap = null;
+    }
+
+    if (mapEl._leaflet_id) {
+      delete mapEl._leaflet_id;
+    }
 
     const isLight = document.body.classList.contains("light-theme");
 
@@ -462,5 +463,5 @@
   };
 
   document.addEventListener("spa-content-loaded", init);
-  document.addEventListener("DOMContentLoaded", init);
+  init();
 })();

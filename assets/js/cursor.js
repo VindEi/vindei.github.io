@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. CRAWLER BYPASS
   if (
     navigator.webdriver ||
     /HeadlessChromium|Lighthouse|Speed-Insights|PageSpeed/i.test(
@@ -9,10 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // 2. MOBILE CHECK
   if (!window.matchMedia("(pointer: fine)").matches) return;
 
-  // 3. SETUP DUAL-ELEMENT CURSOR
   const cursor = document.createElement("div");
   cursor.id = "sticky-cursor";
 
@@ -33,17 +30,24 @@ document.addEventListener("DOMContentLoaded", () => {
     height = 16;
   let innerX = -100,
     innerY = -100;
-
-  let currentScale = 1;
-  let targetScale = 1;
+  let currentScale = 1,
+    targetScale = 1;
   let targetRect = null;
   let isHovering = false;
   let isScrollbar = false;
   let isOverInput = false;
+  let isIdle = false;
+  let rafId = null;
 
   const lerp = (start, end, factor) => start + (end - start) * factor;
 
-  // 4. EVENT LISTENERS
+  const startLoop = () => {
+    if (isIdle) {
+      isIdle = false;
+      rafId = requestAnimationFrame(render);
+    }
+  };
+
   document.addEventListener("mousemove", (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
@@ -52,8 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
       window.innerWidth - document.documentElement.clientWidth;
     isScrollbar =
       scrollbarWidth > 0 && mouseX > window.innerWidth - scrollbarWidth - 5;
-
-    // Check if directly hovering an input or textarea
     isOverInput = !!e.target.closest(
       "input, textarea, select, [contenteditable]",
     );
@@ -65,6 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
       cursor.style.opacity = "1";
       cursorInner.style.opacity = "1";
     }
+
+    startLoop();
   });
 
   document.addEventListener("mouseout", (e) => {
@@ -78,15 +82,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isScrollbar && !isOverInput) {
       cursor.style.opacity = "1";
       cursorInner.style.opacity = "1";
+      startLoop();
     }
   });
 
   document.addEventListener("mousedown", () => {
     targetScale = 0.6;
+    startLoop();
   });
 
   document.addEventListener("mouseup", () => {
     targetScale = 1;
+    startLoop();
   });
 
   document.addEventListener("spa-content-loaded", () => {
@@ -95,30 +102,40 @@ document.addEventListener("DOMContentLoaded", () => {
     cursor.classList.remove("is-locked");
     cursorInner.classList.remove("is-plus");
     targetScale = 1;
+    startLoop();
   });
 
-  // Hover detection: excludes inputs to protect native text selection
   document.addEventListener(
     "mouseover",
     (e) => {
       if (isScrollbar) return;
 
       const target = e.target.closest(
-        "a, button, .project-card, .hover-target",
+        "a, button, .project-card, .hover-target, [role='button']",
       );
-
-      if (target && !target.closest("input, textarea")) {
+      if (
+        target &&
+        !target.closest("input, textarea, select, [contenteditable]")
+      ) {
         isHovering = true;
         targetRect = target.getBoundingClientRect();
         cursor.classList.add("is-locked");
+
+        const computedRadius = window.getComputedStyle(target).borderRadius;
+        const numRadius = parseFloat(computedRadius);
         cursor.dataset.borderRadius =
-          window.getComputedStyle(target).borderRadius;
+          !isNaN(numRadius) && numRadius > 0 ? computedRadius : "8px";
+
         cursorInner.classList.add("is-plus");
+        startLoop();
       } else {
-        isHovering = false;
-        targetRect = null;
-        cursor.classList.remove("is-locked");
-        cursorInner.classList.remove("is-plus");
+        if (isHovering) {
+          isHovering = false;
+          targetRect = null;
+          cursor.classList.remove("is-locked");
+          cursorInner.classList.remove("is-plus");
+          startLoop();
+        }
       }
     },
     { passive: true },
@@ -127,16 +144,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener(
     "scroll",
     () => {
-      if (isHovering && document.querySelector(".is-locked")) {
+      if (isHovering) {
         isHovering = false;
+        targetRect = null;
         cursor.classList.remove("is-locked");
         cursorInner.classList.remove("is-plus");
+        startLoop();
       }
     },
     { passive: true },
   );
 
-  // 5. ANIMATION LOOP
   function render() {
     let targetX, targetY, targetW, targetH, targetRadius;
 
@@ -146,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
       targetY = targetRect.top - padding;
       targetW = targetRect.width + padding * 2;
       targetH = targetRect.height + padding * 2;
-      targetRadius = cursor.dataset.borderRadius || "6px";
+      targetRadius = cursor.dataset.borderRadius || "8px";
     } else {
       targetW = 16;
       targetH = 16;
@@ -171,11 +189,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     innerX = lerp(innerX, mouseX, 0.85);
     innerY = lerp(innerY, mouseY, 0.85);
-
     cursorInner.style.transform = `translate3d(${innerX - 4}px, ${innerY - 4}px, 0)`;
 
-    requestAnimationFrame(render);
+    const deltaPos = Math.abs(posX - targetX) + Math.abs(posY - targetY);
+    const deltaInner = Math.abs(innerX - mouseX) + Math.abs(innerY - mouseY);
+    if (
+      deltaPos < 0.05 &&
+      deltaInner < 0.05 &&
+      Math.abs(currentScale - targetScale) < 0.01
+    ) {
+      isIdle = true;
+      cancelAnimationFrame(rafId);
+      return;
+    }
+
+    rafId = requestAnimationFrame(render);
   }
 
-  render();
+  rafId = requestAnimationFrame(render);
 });

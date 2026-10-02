@@ -4,18 +4,59 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VindE | 404</title>
-    <link rel="stylesheet" href="/assets/css/style.css?v=1.0.1" />
-    <link rel="stylesheet" href="/assets/css/error.css" />
-    <link rel="stylesheet" href="/assets/css/cursor.css" />
+    <script>
+      /**
+       * GitHub Pages SPA Direct-URL Redirect Handler
+       * If loaded via a hard refresh or bookmark on GitHub Pages, transparently
+       * routes back to index.html with the destination query preserved.
+       */
+      (function () {
+        var validRoutes = [
+          "/projects",
+          "/projects/snapdns",
+          "/tools",
+          "/tools/echo",
+          "/tools/data",
+          "/hub",
+          "/hub/snake",
+          "/hub/rng",
+        ];
+        var path = window.location.pathname;
+        var segments = path.split("/").filter(Boolean);
+        var subpath = path;
+
+        // Detect if repository name is prefixed
+        if (
+          window.location.hostname.endsWith("github.io") &&
+          segments.length > 0
+        ) {
+          subpath = "/" + segments.slice(1).join("/");
+        }
+
+        if (validRoutes.indexOf(subpath) !== -1) {
+          var base =
+            segments.length > 1 &&
+            window.location.hostname.endsWith("github.io")
+              ? "/" + segments[0]
+              : "";
+          sessionStorage.setItem(
+            "spa_redirect",
+            path + window.location.search + window.location.hash,
+          );
+          window.location.replace(base + "/");
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="assets/css/style.css?v=1.0.2" />
+    <link rel="stylesheet" href="assets/css/error.css?v=1.0.2" />
+    <link rel="stylesheet" href="assets/css/cursor.css?v=1.0.2" />
   </head>
   <body>
-    <!-- Screen-Reader Accessibility Announcement -->
     <div class="sr-only" role="alert">
       Error 404: Page Not Found. The requested address is invalid or corrupted.
       Press any key or tap anywhere to return home.
     </div>
 
-    <!-- BSOD Container -->
     <div class="bsod-container" aria-hidden="true">
       <div class="crt-overlay"></div>
 
@@ -25,7 +66,6 @@
           data-text="ERROR 404 // PAGE_NOT_FOUND"
         ></div>
 
-        <!-- Error Details -->
         <div class="error-content">
           <p class="error-line" data-text="> EXCEPTION: FILE_NOT_FOUND"></p>
           <p
@@ -35,7 +75,6 @@
           <p class="error-line" data-text="> Check the URL integrity."></p>
         </div>
 
-        <!-- Prompt -->
         <div class="prompt-container">
           <span
             class="error-line prompt-text"
@@ -46,6 +85,6 @@
       </div>
     </div>
 
-    <script src="/assets/js/error.js"></script>
+    <script src="assets/js/error.js" defer></script>
   </body>
 </html>
