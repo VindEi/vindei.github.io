@@ -1,31 +1,21 @@
+/**
+ * Single Page Application Router
+ */
 (function () {
   "use strict";
 
-  function resolveBasePath() {
-    const isGitHub = window.location.hostname.endsWith("github.io");
-    const segments = window.location.pathname.split("/").filter(Boolean);
-    if (isGitHub && segments.length > 0) {
-      const reserved = ["projects", "tools", "hub", "assets", "pages"];
-      if (!reserved.includes(segments[0])) {
-        return "/" + segments[0];
-      }
-    }
-    return "";
-  }
-
-  const BASE_PATH = resolveBasePath();
-  const main = document.getElementById("page-content");
-
+  // SPA Route Mappings
   const routes = {
-    "/": "pages/home.html",
-    "/projects": "pages/projects.html",
-    "/projects/snapdns": "pages/projects/snapdns.html",
-    "/tools": "pages/tools.html",
-    "/tools/echo": "pages/tools/echo.html",
-    "/tools/data": "pages/tools/data.html",
-    "/hub": "pages/hub.html",
-    "/hub/snake": "pages/hub/snake.html",
-    "/hub/rng": "pages/hub/rng.html",
+    "/": "/pages/home.html",
+    "/projects": "/pages/projects.html",
+    "/projects/snapdns": "/pages/projects/snapdns.html",
+    "/tools": "/pages/tools.html",
+    "/tools/echo": "/pages/tools/echo.html",
+    "/tools/data": "/pages/tools/data.html",
+    "/hub": "/pages/hub.html",
+    "/hub/snake": "/pages/hub/snake.html",
+    "/hub/rng": "/pages/hub/rng.html",
+    "/rng": "/pages/hub/rng.html",
   };
 
   const titles = {
@@ -38,88 +28,80 @@
     "/hub": "VindE | Hub",
     "/hub/snake": "VindE | Snake",
     "/hub/rng": "VindE | Randomizer & Wheel",
+    "/rng": "VindE | Randomizer & Wheel",
   };
 
   const pageScripts = {
     "/": [],
-    "/projects": ["assets/js/projects/projects.js"],
-    "/projects/snapdns": ["assets/js/projects/snapdns.js"],
+    "/projects": ["/assets/js/projects/projects.js"],
+    "/projects/snapdns": ["/assets/js/projects/snapdns.js"],
     "/tools": [],
     "/tools/echo": [
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js",
-      "assets/js/tools/echo.js",
+      "/assets/js/tools/echo.js",
     ],
-    "/tools/data": ["assets/js/tools/data.js"],
+    "/tools/data": ["/assets/js/tools/data.js"],
     "/hub": [],
-    "/hub/snake": ["assets/js/hub/snake.js"],
-    "/hub/rng": ["assets/js/hub/rng.js"],
+    "/hub/snake": ["/assets/js/hub/snake.js"],
+    "/hub/rng": ["/assets/js/hub/rng.js"],
+    "/rng": ["/assets/js/hub/rng.js"],
   };
 
   const pageStyles = {
     "/": [],
-    "/projects": ["assets/css/projects/projects.css"],
-    "/projects/snapdns": ["assets/css/projects/snapdns.css"],
-    "/tools": ["assets/css/tools/tools.css"],
+    "/projects": ["/assets/css/projects/projects.css"],
+    "/projects/snapdns": ["/assets/css/projects/snapdns.css"],
+    "/tools": ["/assets/css/tools/tools.css"],
     "/tools/echo": [
       "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css",
-      "assets/css/tools/echo.css",
+      "/assets/css/tools/echo.css",
     ],
-    "/tools/data": ["assets/css/tools/data.css"],
-    "/hub": ["assets/css/hub/hub.css"],
-    "/hub/snake": ["assets/css/hub/snake.css"],
-    "/hub/rng": ["assets/css/hub/rng.css"],
+    "/tools/data": ["/assets/css/tools/data.css"],
+    "/hub": ["/assets/css/hub/hub.css"],
+    "/hub/snake": ["/assets/css/hub/snake.css"],
+    "/hub/rng": ["/assets/css/hub/rng.css"],
+    "/rng": ["/assets/css/hub/rng.css"],
   };
 
-  const loadedStyles = new Set();
   const loadedScripts = new Set();
+  const loadedStyles = new Set();
 
-  let currentNavId = 0;
-  let activeAbortController = null;
-
+  // Non-blocking stylesheet loader (applies CSS immediately without hanging promises)
   function loadStyle(href) {
-    if (loadedStyles.has(href)) {
-      return Promise.resolve();
+    if (
+      loadedStyles.has(href) ||
+      document.querySelector(`link[href="${href}"]`)
+    ) {
+      loadedStyles.add(href);
+      return;
     }
-
-    return new Promise((resolve, reject) => {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = href.startsWith("http") ? href : `${BASE_PATH}/${href}`;
-
-      if (href.includes("cdnjs.cloudflare.com")) {
-        link.integrity =
-          "sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==";
-        link.crossOrigin = "anonymous";
-      }
-
-      link.onload = () => {
-        loadedStyles.add(href);
-        resolve();
-      };
-      link.onerror = () => reject(new Error(`Failed to load style: ${href}`));
-      document.head.appendChild(link);
-    });
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    loadedStyles.add(href);
+    document.head.appendChild(link);
   }
 
+  // Safe script loader (never hangs or rejects)
   function loadScript(src) {
-    if (loadedScripts.has(src)) return Promise.resolve();
-
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src.startsWith("http") ? src : `${BASE_PATH}/${src}`;
-      script.defer = true;
-
-      if (src.includes("cdnjs.cloudflare.com")) {
-        script.integrity =
-          "sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==";
-        script.crossOrigin = "anonymous";
+    return new Promise((resolve) => {
+      if (
+        loadedScripts.has(src) ||
+        document.querySelector(`script[src="${src}"]`)
+      ) {
+        loadedScripts.add(src);
+        return resolve();
       }
-
+      const script = document.createElement("script");
+      script.src = src;
       script.onload = () => {
         loadedScripts.add(src);
         resolve();
       };
-      script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+      script.onerror = () => {
+        console.warn("[Router] Failed to load script:", src);
+        resolve();
+      };
       document.body.appendChild(script);
     });
   }
@@ -136,168 +118,156 @@
       }
     });
 
-    if (path.startsWith("/tools")) {
-      const btn = document.querySelector(".tools-btn");
-      if (btn) btn.classList.add("active");
+    if (
+      (path === "/tools" || path.startsWith("/tools/")) &&
+      document.querySelector(".tools-btn")
+    ) {
+      document.querySelector(".tools-btn").classList.add("active");
     }
-
-    if (path.startsWith("/hub")) {
-      const btn = document.querySelector(".hub-btn");
-      if (btn) btn.classList.add("active");
+    if (
+      (path === "/hub" || path.startsWith("/hub/") || path === "/rng") &&
+      document.querySelector(".hub-btn")
+    ) {
+      document.querySelector(".hub-btn").classList.add("active");
     }
   }
 
-  function normalizePath(rawPath) {
-    let clean = rawPath.split("#")[0].split("?")[0];
-    if (BASE_PATH && clean.startsWith(BASE_PATH)) {
-      clean = clean.slice(BASE_PATH.length);
-    }
-    if (clean.length > 1 && clean.endsWith("/")) {
-      clean = clean.slice(0, -1);
-    }
-    if (clean === "" || clean === "/index.html") {
-      clean = "/";
-    }
-    return clean;
-  }
+  let isInitialRender = true;
 
-  let isInitialLoad = true;
+  async function loadPage(path) {
+    const main = document.getElementById("page-content");
+    if (!main) return;
 
-  async function loadPage(fullPath) {
-    const navId = ++currentNavId;
+    const rawPath = path.split("#")[0].split("?")[0];
+    let cleanPath = rawPath.replace(/\/+$/, "") || "/";
+    if (cleanPath === "/index.html") cleanPath = "/";
 
-    if (activeAbortController) {
-      activeAbortController.abort();
-    }
-    activeAbortController = new AbortController();
-    const signal = activeAbortController.signal;
-
-    const cleanPath = normalizePath(fullPath);
     document.title = titles[cleanPath] || "VindE | 404";
     updateActiveNav(cleanPath);
 
-    if (cleanPath === "/" && isInitialLoad) {
-      isInitialLoad = false;
-      if (main) main.classList.add("loaded");
+    // Initial load optimization for home page shell
+    if (cleanPath === "/" && isInitialRender) {
+      isInitialRender = false;
+      main.classList.add("loaded");
       document.dispatchEvent(new Event("spa-content-loaded"));
       return;
     }
 
-    isInitialLoad = false;
-    const targetFile = routes[cleanPath] || "404.html";
-    const scripts = pageScripts[cleanPath] || [];
-    const styles = pageStyles[cleanPath] || [];
+    isInitialRender = false;
+
+    const routeFile = routes[cleanPath] || "/404.html";
+    const scriptsToLoad = [...(pageScripts[cleanPath] || [])];
+    const stylesToLoad = [...(pageStyles[cleanPath] || [])];
 
     const header = document.getElementById("header-placeholder");
     const footer = document.getElementById("footer-placeholder");
 
     try {
-      if (main) main.classList.remove("loaded");
-
-      const fetchUrl = `${BASE_PATH}/${targetFile}`;
-      const [res] = await Promise.all([
-        fetch(fetchUrl, { signal }),
-        new Promise((resolve) => setTimeout(resolve, 140)),
-      ]);
-
-      if (navId !== currentNavId) return;
-      if (!res.ok) throw new Error(`HTTP_${res.status}`);
+      const res = await fetch(routeFile);
+      if (!res.ok) throw new Error("HTTP_ERR");
       const rawHtml = await res.text();
-      if (navId !== currentNavId) return;
 
       let content = rawHtml;
-      const is404 = !routes[cleanPath];
+      let is404 = false;
 
       if (rawHtml.includes("bsod-container")) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(rawHtml, "text/html");
         content = doc.querySelector(".bsod-container")?.outerHTML || rawHtml;
+        is404 = true;
+        scriptsToLoad.push("/assets/js/error.js");
+        stylesToLoad.push("/assets/css/error.css");
       }
 
+      main.classList.remove("loaded");
+
+      // Reset scroll position
       window.scrollTo(0, 0);
 
-      if (header) {
-        header.classList.toggle("is-hidden", is404);
+      // Visibility toggles
+      if (is404 || cleanPath === "/") {
+        if (header) header.style.display = is404 ? "none" : "";
+        if (footer) footer.style.display = "none";
+      } else {
+        if (header) header.style.display = "";
+        if (footer) footer.style.display = "";
       }
 
-      if (footer) {
-        footer.classList.toggle("is-hidden", is404 || cleanPath === "/");
-      }
-
+      // Theme persistence
       if (is404) {
         document.body.classList.remove("light-theme");
       } else {
-        const theme = localStorage.getItem("theme") || "dark";
-        document.body.classList.toggle("light-theme", theme === "light");
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        if (savedTheme === "light") {
+          document.body.classList.add("light-theme");
+        } else {
+          document.body.classList.remove("light-theme");
+        }
       }
 
-      await Promise.all(styles.map(loadStyle));
-      if (navId !== currentNavId) return;
+      // Inject HTML content
+      main.innerHTML = content;
 
-      if (main) {
-        main.innerHTML = content;
-      }
+      // Apply stylesheets immediately without blocking
+      stylesToLoad.forEach(loadStyle);
 
-      for (const src of scripts) {
+      // Load required scripts
+      for (const src of scriptsToLoad) {
         await loadScript(src);
-        if (navId !== currentNavId) return;
       }
 
+      void main.offsetWidth;
+      main.classList.add("loaded");
       document.dispatchEvent(new Event("spa-content-loaded"));
-
-      if (main) {
-        void main.offsetWidth;
-        main.classList.add("loaded");
-      }
     } catch (err) {
-      if (err.name === "AbortError") return;
-      if (navId !== currentNavId) return;
-
-      console.error("[Router] Navigation failed:", cleanPath, err);
-      if (main) {
-        main.innerHTML =
-          "<div class='error-pane'><h1>DATA_LOAD_ERROR</h1></div>";
-        main.classList.add("loaded");
-      }
+      console.error("[Router] Failed to load path:", cleanPath, err);
+      main.innerHTML = "<h1>DATA_LOAD_ERROR</h1>";
+      main.classList.add("loaded");
     }
   }
 
   window.routerLoadPage = loadPage;
-  window.routerBasePath = BASE_PATH;
 
+  // Intercept local SPA link clicks
   document.body.addEventListener("click", (e) => {
     const link = e.target.closest("a");
-    if (!link) return;
-
-    const href = link.getAttribute("href");
     if (
-      !href ||
-      href.startsWith("http") ||
-      href.startsWith("mailto:") ||
-      link.target === "_blank"
+      link &&
+      link.getAttribute("href")?.startsWith("/") &&
+      !link.getAttribute("target")
     ) {
-      return;
-    }
+      const url = link.getAttribute("href");
+      const path = url.split("#")[0].split("?")[0];
+      let cleanPath = path.replace(/\/+$/, "") || "/";
+      if (cleanPath === "/index.html") cleanPath = "/";
 
-    const cleanPath = normalizePath(href);
-    if (routes[cleanPath] || cleanPath === "/") {
-      e.preventDefault();
-      const targetUrl = `${BASE_PATH}${cleanPath}${link.hash || ""}`;
-      history.pushState(null, null, targetUrl);
-      loadPage(targetUrl);
+      const isSamePath =
+        cleanPath === window.location.pathname ||
+        (cleanPath === "/" && window.location.pathname === "/index.html");
+      const isHashClearing =
+        window.location.hash.length > 0 && !url.includes("#");
+
+      if (isSamePath && !isHashClearing) {
+        e.preventDefault();
+        return;
+      }
+
+      if (routes[cleanPath]) {
+        e.preventDefault();
+        history.pushState(null, null, url);
+        loadPage(url);
+      }
     }
   });
 
-  window.addEventListener("popstate", () => {
-    loadPage(window.location.pathname + window.location.hash);
-  });
+  window.addEventListener("popstate", () => loadPage(location.pathname));
 
-  const redirectTarget = sessionStorage.getItem("spa_redirect");
-  if (redirectTarget) {
-    sessionStorage.removeItem("spa_redirect");
-    history.replaceState(null, null, redirectTarget);
-    loadPage(redirectTarget);
+  // Reliable initial load execution check
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () =>
+      loadPage(location.pathname),
+    );
   } else {
-    loadPage(window.location.pathname + window.location.hash);
+    loadPage(location.pathname);
   }
 })();

@@ -1,15 +1,13 @@
+/**
+ * VindE - Number Generator & Choice Wheel
+ */
+
 (function () {
   "use strict";
 
-  function showNotice(msg) {
-    const el = document.getElementById("rng-notice");
-    if (!el) return;
-    el.innerText = msg;
-    el.classList.remove("is-hidden");
-    setTimeout(() => {
-      el.classList.add("is-hidden");
-    }, 3500);
-  }
+  /* ==========================================================================
+     PER-DAY HISTORY ENGINE
+     ========================================================================== */
 
   function getTodayKey() {
     const d = new Date();
@@ -50,9 +48,7 @@
       delete hist[keys[keys.length - 1]];
     }
 
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(hist));
-    } catch (err) {}
+    localStorage.setItem(storageKey, JSON.stringify(hist));
   }
 
   function renderDailyHistory(containerId, storageKey) {
@@ -68,8 +64,7 @@
 
     const dates = Object.keys(hist).sort().reverse();
     if (dates.length === 0 || dates.every((d) => hist[d].length === 0)) {
-      container.innerHTML =
-        '<span class="history-empty">No history recorded yet.</span>';
+      container.innerHTML = `<span class="history-empty">No history recorded yet.</span>`;
       return;
     }
 
@@ -100,6 +95,10 @@
     });
   }
 
+  /* ==========================================================================
+     MODULE 1: NUMBER GENERATOR
+     ========================================================================== */
+
   function getSecureRandomInt(min, max) {
     const range = max - min + 1;
     const maxUint32 = 0xffffffff;
@@ -122,24 +121,17 @@
 
     if (clearBtn) {
       clearBtn.onclick = () => {
-        try {
-          localStorage.removeItem("vinde_rng_daily_history");
-        } catch (e) {}
+        localStorage.removeItem("vinde_rng_daily_history");
         renderDailyHistory("rng-history", "vinde_rng_daily_history");
       };
     }
 
     rollBtn.onclick = () => {
-      const min = parseInt(document.getElementById("rng-min").value, 10);
-      const max = parseInt(document.getElementById("rng-max").value, 10);
-
-      if (isNaN(min) || isNaN(max)) {
-        showNotice("Please enter valid numbers for Min and Max.");
-        return;
-      }
+      const min = parseInt(document.getElementById("rng-min").value, 10) || 1;
+      const max = parseInt(document.getElementById("rng-max").value, 10) || 3;
 
       if (min >= max) {
-        showNotice("Min bound must be strictly less than Max bound.");
+        alert("Min must be less than Max.");
         return;
       }
 
@@ -162,6 +154,10 @@
     };
   }
 
+  /* ==========================================================================
+     MODULE 2: WHEEL SPINNER (Default 1, 2, 3)
+     ========================================================================== */
+
   let canvas, ctx;
   let slices = ["1", "2", "3"];
   let currentAngle = 0;
@@ -177,6 +173,7 @@
     "#161924",
     "#222838",
   ];
+
   const paletteLight = [
     "#ffffff",
     "#f0f2f7",
@@ -210,9 +207,7 @@
     const clearWheelBtn = document.getElementById("clear-wheel-history-btn");
     if (clearWheelBtn) {
       clearWheelBtn.onclick = () => {
-        try {
-          localStorage.removeItem("vinde_wheel_daily_history");
-        } catch (e) {}
+        localStorage.removeItem("vinde_wheel_daily_history");
         renderDailyHistory("wheel-history", "vinde_wheel_daily_history");
       };
     }
@@ -232,12 +227,15 @@
       };
     }
 
-    window.addEventListener("resize", () => {
-      if (document.getElementById("wheel-canvas")) {
-        setupDPI();
-        drawWheel();
-      }
-    });
+    window.removeEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize);
+  }
+
+  function handleResize() {
+    if (document.getElementById("wheel-canvas")) {
+      setupDPI();
+      drawWheel();
+    }
   }
 
   function spinAnimationLoop() {
@@ -265,8 +263,8 @@
 
     winningIndex = Math.floor(pointerAngle / arc);
     const winner = slices[winningIndex];
-    document.getElementById("wheel-result-banner").innerText =
-      `Result: ${winner}`;
+    const banner = document.getElementById("wheel-result-banner");
+    if (banner) banner.innerText = `Result: ${winner}`;
 
     saveToHistory("vinde_wheel_daily_history", winner);
     renderDailyHistory("wheel-history", "vinde_wheel_daily_history");
@@ -320,12 +318,6 @@
     });
 
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = isLight ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.1)";
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.beginPath();
     ctx.arc(cx, cy, 22, 0, Math.PI * 2);
     ctx.fillStyle = isLight ? "#f4f5f8" : "#07080a";
     ctx.fill();
@@ -360,7 +352,7 @@
       list.querySelectorAll(".slice-del-btn").forEach((b) => {
         b.onclick = () => {
           if (slices.length <= 2) {
-            showNotice("At least 2 choices are required.");
+            alert("Need at least 2 options.");
             return;
           }
           slices.splice(parseInt(b.dataset.idx, 10), 1);
@@ -375,7 +367,7 @@
       const val = input.value.trim();
       if (!val) return;
       if (slices.length >= 16) {
-        showNotice("Maximum 16 options allowed.");
+        alert("Maximum 16 options.");
         return;
       }
       slices.push(val);
@@ -423,6 +415,12 @@
     initSpinner();
   }
 
+  if (
+    document.getElementById("rng-roll-btn") ||
+    document.getElementById("wheel-canvas")
+  ) {
+    initModule();
+  }
+
   document.addEventListener("spa-content-loaded", initModule);
-  initModule();
 })();
