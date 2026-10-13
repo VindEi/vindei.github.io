@@ -113,6 +113,7 @@
           .classList.remove("is-hidden");
         document.getElementById("decrypt-error").classList.add("is-hidden");
       } catch (e) {
+        document.getElementById("decrypt-error").innerText = "Invalid password or corrupted link.";
         document.getElementById("decrypt-error").classList.remove("is-hidden");
       } finally {
         decBtn.disabled = false;
@@ -211,5 +212,4 @@
   });
 
   document.addEventListener("spa-content-loaded", init);
-  init();
 })();

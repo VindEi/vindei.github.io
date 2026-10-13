@@ -1,22 +1,30 @@
-.tools-page {
+/* ==========================================================================
+   Directory & Hub Grid Styles (Shared for /tools and /hub)
+   ========================================================================== */
+
+.tools-page,
+.hub-page {
   padding-top: 1rem;
   animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.tools-header {
+.tools-header,
+.hub-header {
   margin-bottom: 3rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 2rem;
 }
 
-.tools-header h1 {
+.tools-header h1,
+.hub-header h1 {
   font-size: 3.5rem;
   color: var(--text);
   margin: 0.5rem 0 1rem;
   letter-spacing: -0.04em;
 }
 
-.tools-subtitle {
+.tools-subtitle,
+.hub-subtitle {
   font-size: 1.05rem;
   color: var(--text-dim);
   max-width: 600px;
@@ -24,13 +32,15 @@
   margin: 0;
 }
 
-.tools-grid {
+.tools-grid,
+.hub-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
 
-.tool-card {
+.tool-card,
+.hub-card {
   background: var(--surface);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -47,20 +57,23 @@
   min-height: 280px;
 }
 
-.tool-card:hover {
+.tool-card:hover,
+.hub-card:hover {
   transform: translateY(-4px);
   border-color: var(--accent-gold);
   background: var(--surface-hover);
 }
 
-.tool-card-top {
+.tool-card-top,
+.hub-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.tool-icon-box {
+.tool-icon-box,
+.hub-icon-box {
   width: 44px;
   height: 44px;
   border-radius: 6px;
@@ -73,7 +86,8 @@
   font-size: 1.2rem;
 }
 
-.tool-status-tag {
+.tool-status-tag,
+.hub-status-tag {
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.65rem;
   font-weight: 700;
@@ -85,20 +99,23 @@
   border-radius: 4px;
 }
 
-.tool-card-body h2 {
+.tool-card-body h2,
+.hub-card-body h2 {
   font-size: 1.5rem;
   color: var(--text);
   margin-bottom: 0.8rem;
 }
 
-.tool-card-body p {
+.tool-card-body p,
+.hub-card-body p {
   color: var(--text-dim);
   font-size: 0.95rem;
   line-height: 1.6;
   margin: 0;
 }
 
-.tool-card-footer {
+.tool-card-footer,
+.hub-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -107,7 +124,8 @@
   border-top: 1px solid var(--border-color);
 }
 
-.tool-meta {
+.tool-meta,
+.hub-meta {
   font-family: monospace;
   font-size: 0.75rem;
   color: var(--text-dim);
@@ -116,7 +134,8 @@
   gap: 6px;
 }
 
-.tool-launch-btn {
+.tool-launch-btn,
+.hub-launch-btn {
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
@@ -129,15 +148,18 @@
   transition: transform 0.2s ease;
 }
 
-.tool-card:hover .tool-launch-btn {
+.tool-card:hover .tool-launch-btn,
+.hub-card:hover .hub-launch-btn {
   transform: translateX(4px);
 }
 
 @media (max-width: 900px) {
-  .tools-grid {
+  .tools-grid,
+  .hub-grid {
     grid-template-columns: 1fr;
   }
-  .tools-header h1 {
+  .tools-header h1,
+  .hub-header h1 {
     font-size: 2.5rem;
   }
 }

@@ -140,5 +140,4 @@
   }
 
   document.addEventListener("spa-content-loaded", initSnapDNS);
-  initSnapDNS();
 })();

@@ -27,8 +27,8 @@
     "/tools/data": "VindE | Data Encrypt",
     "/hub": "VindE | Hub",
     "/hub/snake": "VindE | Snake",
-    "/hub/rng": "VindE | Randomizer & Wheel",
-    "/rng": "VindE | Randomizer & Wheel",
+    "/hub/rng": "VindE | RNG",
+    "/rng": "VindE | RNG",
   };
 
   const pageScripts = {
@@ -37,7 +37,10 @@
     "/projects/snapdns": ["/assets/js/projects/snapdns.js"],
     "/tools": [],
     "/tools/echo": [
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js",
+      {
+        src: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js",
+        fallback: "/assets/leaflet/leaflet.js",
+      },
       "/assets/js/tools/echo.js",
     ],
     "/tools/data": ["/assets/js/tools/data.js"],
@@ -53,11 +56,14 @@
     "/projects/snapdns": ["/assets/css/projects/snapdns.css"],
     "/tools": ["/assets/css/tools/tools.css"],
     "/tools/echo": [
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css",
+      {
+        href: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css",
+        fallback: "/assets/leaflet/leaflet.css",
+      },
       "/assets/css/tools/echo.css",
     ],
     "/tools/data": ["/assets/css/tools/data.css"],
-    "/hub": ["/assets/css/hub/hub.css"],
+    "/hub": ["/assets/css/tools/tools.css"],
     "/hub/snake": ["/assets/css/hub/snake.css"],
     "/hub/rng": ["/assets/css/hub/rng.css"],
     "/rng": ["/assets/css/hub/rng.css"],
@@ -66,25 +72,56 @@
   const loadedScripts = new Set();
   const loadedStyles = new Set();
 
-  // Non-blocking stylesheet loader (applies CSS immediately without hanging promises)
-  function loadStyle(href) {
-    if (
-      loadedStyles.has(href) ||
-      document.querySelector(`link[href="${href}"]`)
-    ) {
+  // Asynchronous stylesheet loader with fallback support
+  function loadStyle(item) {
+    return new Promise((resolve) => {
+      const href = typeof item === "string" ? item : item.href;
+      const fallback = typeof item === "object" ? item.fallback : null;
+      if (
+        loadedStyles.has(href) ||
+        document.querySelector(`link[href="${href}"]`)
+      ) {
+        loadedStyles.add(href);
+        return resolve();
+      }
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = href;
+      link.onload = () => {
+        loadedStyles.add(href);
+        resolve();
+      };
+      link.onerror = () => {
+        if (fallback && !loadedStyles.has(fallback)) {
+          console.warn("[Router] Style failed, loading fallback:", fallback);
+          const fallbackLink = document.createElement("link");
+          fallbackLink.rel = "stylesheet";
+          fallbackLink.href = fallback;
+          fallbackLink.onload = () => {
+            loadedStyles.add(fallback);
+            loadedStyles.add(href);
+            resolve();
+          };
+          fallbackLink.onerror = () => {
+            console.warn("[Router] Fallback style also failed:", fallback);
+            resolve();
+          };
+          document.head.appendChild(fallbackLink);
+        } else {
+          console.warn("[Router] Failed to load style:", href);
+          resolve();
+        }
+      };
       loadedStyles.add(href);
-      return;
-    }
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = href;
-    loadedStyles.add(href);
-    document.head.appendChild(link);
+      document.head.appendChild(link);
+    });
   }
 
-  // Safe script loader (never hangs or rejects)
-  function loadScript(src) {
+  // Safe script loader with fallback support
+  function loadScript(item) {
     return new Promise((resolve) => {
+      const src = typeof item === "string" ? item : item.src;
+      const fallback = typeof item === "object" ? item.fallback : null;
       if (
         loadedScripts.has(src) ||
         document.querySelector(`script[src="${src}"]`)
@@ -99,8 +136,24 @@
         resolve();
       };
       script.onerror = () => {
-        console.warn("[Router] Failed to load script:", src);
-        resolve();
+        if (fallback && !loadedScripts.has(fallback)) {
+          console.warn("[Router] Script failed, loading fallback:", fallback);
+          const fallbackScript = document.createElement("script");
+          fallbackScript.src = fallback;
+          fallbackScript.onload = () => {
+            loadedScripts.add(fallback);
+            loadedScripts.add(src);
+            resolve();
+          };
+          fallbackScript.onerror = () => {
+            console.warn("[Router] Fallback script also failed:", fallback);
+            resolve();
+          };
+          document.body.appendChild(fallbackScript);
+        } else {
+          console.warn("[Router] Failed to load script:", src);
+          resolve();
+        }
       };
       document.body.appendChild(script);
     });
@@ -151,6 +204,10 @@
       main.classList.add("loaded");
       document.dispatchEvent(new Event("spa-content-loaded"));
       return;
+    }
+
+    if (isInitialRender && cleanPath !== "/") {
+      main.classList.remove("loaded");
     }
 
     isInitialRender = false;
@@ -205,11 +262,11 @@
         }
       }
 
+      // Load stylesheets first so elements never render unstyled (prevents button/border transition flash)
+      await Promise.all(stylesToLoad.map(loadStyle));
+
       // Inject HTML content
       main.innerHTML = content;
-
-      // Apply stylesheets immediately without blocking
-      stylesToLoad.forEach(loadStyle);
 
       // Load required scripts
       for (const src of scriptsToLoad) {
@@ -262,12 +319,21 @@
 
   window.addEventListener("popstate", () => loadPage(location.pathname));
 
+  function startRouter() {
+    const redirect = sessionStorage.getItem("spa_redirect");
+    if (redirect) {
+      sessionStorage.removeItem("spa_redirect");
+      history.replaceState(null, null, redirect);
+      loadPage(redirect);
+      return;
+    }
+    loadPage(location.pathname);
+  }
+
   // Reliable initial load execution check
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () =>
-      loadPage(location.pathname),
-    );
+    document.addEventListener("DOMContentLoaded", startRouter);
   } else {
-    loadPage(location.pathname);
+    startRouter();
   }
 })();

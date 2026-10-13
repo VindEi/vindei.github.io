@@ -112,6 +112,18 @@
     return min + (buffer[0] % range);
   }
 
+  let noticeTimer = null;
+  function showNotice(msg) {
+    const notice = document.getElementById("rng-notice");
+    if (!notice) return;
+    notice.innerText = msg;
+    notice.classList.remove("is-hidden");
+    clearTimeout(noticeTimer);
+    noticeTimer = setTimeout(() => {
+      notice.classList.add("is-hidden");
+    }, 4000);
+  }
+
   function initGenerator() {
     const rollBtn = document.getElementById("rng-roll-btn");
     const clearBtn = document.getElementById("clear-rng-history-btn");
@@ -131,7 +143,7 @@
       const max = parseInt(document.getElementById("rng-max").value, 10) || 3;
 
       if (min >= max) {
-        alert("Min must be less than Max.");
+        showNotice("Min must be less than Max.");
         return;
       }
 
@@ -352,7 +364,7 @@
       list.querySelectorAll(".slice-del-btn").forEach((b) => {
         b.onclick = () => {
           if (slices.length <= 2) {
-            alert("Need at least 2 options.");
+            showNotice("Need at least 2 options.");
             return;
           }
           slices.splice(parseInt(b.dataset.idx, 10), 1);
@@ -367,7 +379,7 @@
       const val = input.value.trim();
       if (!val) return;
       if (slices.length >= 16) {
-        alert("Maximum 16 options.");
+        showNotice("Maximum 16 options.");
         return;
       }
       slices.push(val);
@@ -410,16 +422,15 @@
   }
 
   function initModule() {
+    if (
+      !document.getElementById("rng-roll-btn") &&
+      !document.getElementById("wheel-canvas")
+    ) {
+      return;
+    }
     initTabs();
     initGenerator();
     initSpinner();
-  }
-
-  if (
-    document.getElementById("rng-roll-btn") ||
-    document.getElementById("wheel-canvas")
-  ) {
-    initModule();
   }
 
   document.addEventListener("spa-content-loaded", initModule);

@@ -192,6 +192,10 @@
 
   function handleDirectionInput(newX, newY) {
     if (!isRunning) {
+      const title = document.getElementById("overlay-title");
+      if (title && title.innerText === "Game Over") {
+        return;
+      }
       startGame();
     }
     if (hasTurnedThisTick) return;
@@ -340,5 +344,4 @@
   document.addEventListener("spa-content-loaded", cleanUp);
 
   document.addEventListener("spa-content-loaded", initEngine);
-  initEngine();
 })();

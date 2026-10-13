@@ -113,7 +113,7 @@
 
     if (refreshIcon) refreshIcon.classList.add("fa-spin");
     ipEl.innerText = "CONNECTING...";
-    ispEl.innerText = "Establishing secure race...";
+    ispEl.innerText = "Detecting network telemetry...";
     if (logSummary) logSummary.innerText = "RACING APIs...";
     if (logList) logList.innerHTML = "";
 
@@ -463,5 +463,4 @@
   };
 
   document.addEventListener("spa-content-loaded", init);
-  init();
 })();

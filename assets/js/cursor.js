@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentScale = 1,
     targetScale = 1;
   let targetRect = null;
+  let hoverTargetEl = null;
   let isHovering = false;
   let isScrollbar = false;
   let isOverInput = false;
@@ -96,8 +97,23 @@ document.addEventListener("DOMContentLoaded", () => {
     startLoop();
   });
 
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (link && link.getAttribute("href")?.startsWith("/") && !link.getAttribute("target")) {
+      isHovering = false;
+      hoverTargetEl = null;
+      targetRect = null;
+      cursor.classList.remove("is-locked");
+      cursorInner.classList.remove("is-plus");
+      cursor.style.opacity = "0";
+      cursorInner.style.opacity = "0";
+      targetScale = 1;
+    }
+  });
+
   document.addEventListener("spa-content-loaded", () => {
     isHovering = false;
+    hoverTargetEl = null;
     targetRect = null;
     cursor.classList.remove("is-locked");
     cursorInner.classList.remove("is-plus");
@@ -118,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         !target.closest("input, textarea, select, [contenteditable]")
       ) {
         isHovering = true;
+        hoverTargetEl = target;
         targetRect = target.getBoundingClientRect();
         cursor.classList.add("is-locked");
 
@@ -131,6 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         if (isHovering) {
           isHovering = false;
+          hoverTargetEl = null;
           targetRect = null;
           cursor.classList.remove("is-locked");
           cursorInner.classList.remove("is-plus");
@@ -146,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     () => {
       if (isHovering) {
         isHovering = false;
+        hoverTargetEl = null;
         targetRect = null;
         cursor.classList.remove("is-locked");
         cursorInner.classList.remove("is-plus");
@@ -158,7 +177,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     let targetX, targetY, targetW, targetH, targetRadius;
 
-    if (isHovering && targetRect && !isScrollbar && !isOverInput) {
+    if (
+      isHovering &&
+      hoverTargetEl &&
+      document.body.contains(hoverTargetEl) &&
+      !isScrollbar &&
+      !isOverInput
+    ) {
+      targetRect = hoverTargetEl.getBoundingClientRect();
       const padding = 6;
       targetX = targetRect.left - padding;
       targetY = targetRect.top - padding;
