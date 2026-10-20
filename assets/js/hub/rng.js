@@ -31,6 +31,19 @@
     });
   }
 
+  function formatOptionsBadge(options) {
+    if (!options || !options.length) return "";
+    const nums = options.map((o) => Number(o));
+    const isSeq =
+      nums.every((n) => !Number.isNaN(n) && Number.isInteger(n)) &&
+      nums.length >= 2 &&
+      nums.every((n, i) => (i === 0 ? true : n === nums[i - 1] + 1));
+    if (isSeq) {
+      return `${nums[0]}–${nums[nums.length - 1]}`;
+    }
+    return options.join(", ");
+  }
+
   function saveToHistory(storageKey, val) {
     let hist = {};
     try {
@@ -64,7 +77,11 @@
 
     const dates = Object.keys(hist).sort().reverse();
     if (dates.length === 0 || dates.every((d) => hist[d].length === 0)) {
-      container.innerHTML = `<span class="history-empty">No history recorded yet.</span>`;
+      const emptyText =
+        containerId === "wheel-history"
+          ? "No spins recorded."
+          : "No rolls recorded.";
+      container.innerHTML = `<span class="history-empty">${emptyText}</span>`;
       return;
     }
 
@@ -83,10 +100,60 @@
 
       const chips = document.createElement("div");
       chips.className = "history-chips";
-      items.forEach((itemVal) => {
+      items.forEach((item) => {
         const chip = document.createElement("span");
         chip.className = "history-chip";
-        chip.innerText = itemVal;
+
+        if (
+          typeof item === "object" &&
+          item !== null &&
+          item.val !== undefined
+        ) {
+          chip.classList.add("is-interactive", "hover-target");
+
+          const valSpan = document.createElement("span");
+          valSpan.className = "chip-val";
+          valSpan.innerText = item.val;
+          chip.appendChild(valSpan);
+
+          // RNG bound tracking (min - max)
+          if (item.min !== undefined && item.max !== undefined) {
+            const rangeSpan = document.createElement("span");
+            rangeSpan.className = "chip-range";
+            rangeSpan.innerText = `${item.min}–${item.max}`;
+            chip.appendChild(rangeSpan);
+            chip.title = `Rolled ${item.val} (Range: ${item.min} to ${item.max}${item.time ? ` at ${item.time}` : ""}). Click to restore range.`;
+
+            chip.onclick = () => {
+              const minInput = document.getElementById("rng-min");
+              const maxInput = document.getElementById("rng-max");
+              if (minInput && maxInput) {
+                minInput.value = item.min;
+                maxInput.value = item.max;
+              }
+            };
+          } else if (item.options && Array.isArray(item.options)) {
+            // Wheel choices tracking
+            const rangeSpan = document.createElement("span");
+            rangeSpan.className = "chip-range";
+            rangeSpan.innerText = formatOptionsBadge(item.options);
+            chip.appendChild(rangeSpan);
+            chip.title = `Winner: ${item.val} (Options: ${item.options.join(", ")}${item.time ? ` at ${item.time}` : ""}). Click to restore options.`;
+
+            chip.onclick = () => {
+              slices = [...item.options];
+              winningIndex = null;
+              if (typeof renderSliceList === "function") {
+                renderSliceList();
+              }
+              drawWheel();
+            };
+          }
+        } else {
+          // Legacy plain string/number
+          chip.innerText = String(item);
+        }
+
         chips.appendChild(chip);
       });
       group.appendChild(chips);
@@ -127,7 +194,18 @@
   function initGenerator() {
     const rollBtn = document.getElementById("rng-roll-btn");
     const clearBtn = document.getElementById("clear-rng-history-btn");
+    const minInput = document.getElementById("rng-min");
+    const maxInput = document.getElementById("rng-max");
     if (!rollBtn) return;
+
+    function getBounds() {
+      const minVal = parseInt(minInput ? minInput.value : "1", 10);
+      const maxVal = parseInt(maxInput ? maxInput.value : "3", 10);
+      return {
+        min: Number.isNaN(minVal) ? 1 : minVal,
+        max: Number.isNaN(maxVal) ? 3 : maxVal,
+      };
+    }
 
     renderDailyHistory("rng-history", "vinde_rng_daily_history");
 
@@ -139,8 +217,7 @@
     }
 
     rollBtn.onclick = () => {
-      const min = parseInt(document.getElementById("rng-min").value, 10) || 1;
-      const max = parseInt(document.getElementById("rng-max").value, 10) || 3;
+      const { min, max } = getBounds();
 
       if (min >= max) {
         showNotice("Min must be less than Max.");
@@ -159,7 +236,16 @@
           const finalVal = getSecureRandomInt(min, max);
           out.innerText = finalVal;
           rollBtn.disabled = false;
-          saveToHistory("vinde_rng_daily_history", String(finalVal));
+
+          const now = new Date();
+          const timeStr = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+          saveToHistory("vinde_rng_daily_history", {
+            val: finalVal,
+            min: min,
+            max: max,
+            time: timeStr,
+          });
           renderDailyHistory("rng-history", "vinde_rng_daily_history");
         }
       }, 30);
@@ -176,6 +262,7 @@
   let angularVelocity = 0;
   let isSpinning = false;
   let winningIndex = null;
+  let renderSliceList = null;
 
   const paletteDark = [
     "#12141d",
@@ -273,12 +360,19 @@
     let pointerAngle = (Math.PI * 1.5 - normalized) % (Math.PI * 2);
     if (pointerAngle < 0) pointerAngle += Math.PI * 2;
 
-    winningIndex = Math.floor(pointerAngle / arc);
+    winningIndex = Math.floor(pointerAngle / arc) % slices.length;
     const winner = slices[winningIndex];
     const banner = document.getElementById("wheel-result-banner");
     if (banner) banner.innerText = `Result: ${winner}`;
 
-    saveToHistory("vinde_wheel_daily_history", winner);
+    const now = new Date();
+    const timeStr = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+    saveToHistory("vinde_wheel_daily_history", {
+      val: winner,
+      options: [...slices],
+      time: timeStr,
+    });
     renderDailyHistory("wheel-history", "vinde_wheel_daily_history");
   }
 
@@ -349,7 +443,7 @@
     const addBtn = document.getElementById("slice-add-btn");
     if (!list || !input || !addBtn) return;
 
-    const renderList = () => {
+    renderSliceList = () => {
       list.innerHTML = "";
       slices.forEach((text, idx) => {
         const item = document.createElement("div");
@@ -369,7 +463,7 @@
           }
           slices.splice(parseInt(b.dataset.idx, 10), 1);
           winningIndex = null;
-          renderList();
+          renderSliceList();
           drawWheel();
         };
       });
@@ -385,7 +479,7 @@
       slices.push(val);
       input.value = "";
       winningIndex = null;
-      renderList();
+      renderSliceList();
       drawWheel();
     };
 
@@ -393,7 +487,7 @@
       if (e.key === "Enter") addBtn.click();
     };
 
-    renderList();
+    renderSliceList();
   }
 
   function initTabs() {
@@ -426,6 +520,7 @@
       !document.getElementById("rng-roll-btn") &&
       !document.getElementById("wheel-canvas")
     ) {
+      window.removeEventListener("resize", handleResize);
       return;
     }
     initTabs();
@@ -434,4 +529,9 @@
   }
 
   document.addEventListener("spa-content-loaded", initModule);
+  document.addEventListener("themeChanged", () => {
+    if (document.getElementById("wheel-canvas")) {
+      drawWheel();
+    }
+  });
 })();

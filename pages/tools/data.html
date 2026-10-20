@@ -46,13 +46,13 @@
           class="btn-action primary hover-target btn-full-width"
           type="button"
         >
-          Generate Secure Link
+          Encrypt &amp; Create Link
         </button>
       </div>
 
       <div id="decrypt-section" class="decrypt-panel is-hidden">
         <div class="decrypt-header">
-          <h2>Secure Fragment</h2>
+          <h2>Decrypt Message</h2>
           <a
             id="create-new-btn"
             href="/tools/data"
@@ -63,18 +63,27 @@
         </div>
 
         <p class="decrypt-desc">
-          This URL contains an encrypted message. Enter the password below to
-          view the content.
+          This link contains an encrypted message. Enter the password to view its content.
         </p>
 
         <div class="field-block">
           <label class="tag-pill license">Password</label>
-          <input
-            type="password"
-            id="decrypt-pass"
-            class="hover-target"
-            placeholder="Enter password to unlock"
-          />
+          <div class="input-action-group">
+            <input
+              type="password"
+              id="decrypt-pass"
+              class="hover-target"
+              placeholder="Enter password to unlock"
+            />
+            <button
+              id="toggle-decrypt-pass-btn"
+              class="btn-action hover-target"
+              type="button"
+              aria-label="Toggle Password Visibility"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
         </div>
 
         <button
@@ -82,12 +91,12 @@
           class="btn-action primary hover-target btn-full-width"
           type="button"
         >
-          Unlock Payload
+          Decrypt Message
         </button>
 
         <div class="decrypt-error-container">
           <p id="decrypt-error" class="error-text is-hidden">
-            Invalid password.
+            Invalid password or corrupted link.
           </p>
         </div>
       </div>
@@ -95,26 +104,23 @@
 
     <div class="encrypt-side-card">
       <div class="security-brief">
-        <h3 class="security-heading">Information</h3>
+        <h3 class="security-heading">How It Works</h3>
         <ul class="spec-list">
           <li>
-            <strong>Privacy</strong>
-            Encryption is handled entirely in your browser. No data is sent to
-            the server.
+            <strong>Zero Server Storage</strong>
+            Encryption runs client-side in your browser via Web Crypto API. No data is sent to or stored on a server.
           </li>
           <li>
-            <strong>Permanence</strong>
-            Time does not affect data. As long as you have the URL and password,
-            the message can be recovered.
+            <strong>URL-Based</strong>
+            The encrypted text is stored entirely in the URL hash, so the link never expires on a backend.
           </li>
           <li>
-            <strong>Storage</strong>
-            Messages are stored in the URL fragment. It is lost if the link
-            itself is misplaced.
+            <strong>No Recovery</strong>
+            Keep your link and password safe. If either is lost, the message cannot be recovered.
           </li>
           <li>
-            <strong>Technology</strong>
-            Uses AES-256-GCM with 200,000 PBKDF2 iterations for key derivation.
+            <strong>Strong Encryption</strong>
+            Uses standard AES-256-GCM with 200,000 PBKDF2 (SHA-256) derivation rounds.
           </li>
         </ul>
       </div>
@@ -124,7 +130,7 @@
       <div id="result-area" class="fade-in is-hidden">
         <label class="tag-pill platform result-pill">Encrypted Link</label>
         <p class="result-note">
-          Copy the link below to share your message securely.
+          Share this link and your password to let someone decrypt your message.
         </p>
         <div class="input-action-group">
           <input
@@ -151,7 +157,7 @@
           class="btn-action hover-target btn-full-width close-btn-spacing"
           type="button"
         >
-          Close Fragment
+          Done
         </button>
       </div>
     </div>

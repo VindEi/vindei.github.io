@@ -73,6 +73,7 @@
   }
 
   function initSnapDNS() {
+    document.body.style.overflow = "";
     setupImageFallbacks();
 
     const visual = document.querySelector(".product-visual");
@@ -113,6 +114,7 @@
       const closeModalWindow = () => {
         modal.classList.remove("open");
         modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
         document.removeEventListener("keydown", handleEscapeKey);
       };
 
@@ -124,6 +126,7 @@
         e.preventDefault();
         modal.classList.add("open");
         modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
         document.addEventListener("keydown", handleEscapeKey);
       });
 

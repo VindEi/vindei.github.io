@@ -112,6 +112,7 @@
           .getElementById("decrypted-output-container")
           .classList.remove("is-hidden");
         document.getElementById("decrypt-error").classList.add("is-hidden");
+        document.getElementById("decrypted-output-container")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
       } catch (e) {
         document.getElementById("decrypt-error").innerText = "Invalid password or corrupted link.";
         document.getElementById("decrypt-error").classList.remove("is-hidden");
@@ -181,6 +182,41 @@
         } else {
           passInput.type = "password";
           icon.className = "fas fa-eye";
+        }
+      };
+    }
+
+    const toggleDecBtn = document.getElementById("toggle-decrypt-pass-btn");
+    if (toggleDecBtn) {
+      toggleDecBtn.onclick = () => {
+        const passInput = document.getElementById("decrypt-pass");
+        const icon = toggleDecBtn.querySelector("i");
+        if (passInput.type === "password") {
+          passInput.type = "text";
+          icon.className = "fas fa-eye-slash";
+        } else {
+          passInput.type = "password";
+          icon.className = "fas fa-eye";
+        }
+      };
+    }
+
+    const dataPassInput = document.getElementById("data-pass");
+    if (dataPassInput) {
+      dataPassInput.onkeydown = (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          EncryptHandler.encrypt();
+        }
+      };
+    }
+
+    const decPassInput = document.getElementById("decrypt-pass");
+    if (decPassInput) {
+      decPassInput.onkeydown = (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          EncryptHandler.decrypt();
         }
       };
     }

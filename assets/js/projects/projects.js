@@ -171,5 +171,17 @@
   }
 
   window.addEventListener("resize", renderProjectGroups);
-  document.addEventListener("spa-content-loaded", initProjects);
+  function handleRoute() {
+    const grid = document.querySelector(".projects-grid");
+    if (!grid) {
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+        resizeObserver = null;
+      }
+      return;
+    }
+    initProjects();
+  }
+
+  document.addEventListener("spa-content-loaded", handleRoute);
 })();

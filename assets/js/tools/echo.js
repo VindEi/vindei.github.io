@@ -42,7 +42,7 @@
     safeSet(
       "user-res",
       () =>
-        `${window.screen.width * window.devicePixelRatio} x ${window.screen.height * window.devicePixelRatio}px`,
+        `${Math.round(window.screen.width * (window.devicePixelRatio || 1))} x ${Math.round(window.screen.height * (window.devicePixelRatio || 1))}px`,
     );
     safeSet("user-gamut", () =>
       window.matchMedia("(color-gamut: p3)").matches ? "Display P3" : "sRGB",
@@ -54,7 +54,7 @@
     );
 
     safeSet("user-bot", () =>
-      navigator.webdriver ? "Automated Script" : "Verified Human",
+      navigator.webdriver ? "Automated" : "None detected",
     );
     safeSet("user-sys-theme", () =>
       window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -112,9 +112,9 @@
     if (!ipEl) return;
 
     if (refreshIcon) refreshIcon.classList.add("fa-spin");
-    ipEl.innerText = "CONNECTING...";
-    ispEl.innerText = "Detecting network telemetry...";
-    if (logSummary) logSummary.innerText = "RACING APIs...";
+    ipEl.innerText = "Looking up IP...";
+    ispEl.innerText = "Detecting connection...";
+    if (logSummary) logSummary.innerText = "Querying APIs...";
     if (logList) logList.innerHTML = "";
 
     const globalStart = performance.now();
@@ -148,7 +148,7 @@
             ip: j.ip,
             isp: j.connection?.isp,
             org: j.continent,
-            asn: `AS${j.connection?.asn}`,
+            asn: j.connection?.asn ? (String(j.connection.asn).startsWith("AS") ? j.connection.asn : `AS${j.connection.asn}`) : "---",
             city: j.city,
             country: j.country,
             lat: j.latitude,
@@ -166,7 +166,7 @@
           ip: j.ipAddress,
           isp: j.asnOrganization || "Resolved Network",
           org: j.continent,
-          asn: `AS${j.asn}`,
+          asn: j.asn ? (String(j.asn).startsWith("AS") ? j.asn : `AS${j.asn}`) : "---",
           city: j.cityName,
           country: j.countryName,
           lat: j.latitude,
@@ -185,7 +185,7 @@
           ip: j.ip,
           isp: j.org,
           org: j.continent_code,
-          asn: j.asn,
+          asn: j.asn ? (String(j.asn).startsWith("AS") ? j.asn : `AS${j.asn}`) : "---",
           city: j.city,
           country: j.country_name,
           lat: j.latitude,
@@ -378,14 +378,16 @@
 
     if (data.lat !== 0 && data.lon !== 0) {
       mapCoords = { lat: data.lat, lon: data.lon };
-      updateMap(data.lat, data.lon);
+      const needsMap = !echoMap;
+      mapCoords = { lat: data.lat, lon: data.lon };
+      if (needsMap) updateMap(data.lat, data.lon);
     }
 
     const copyBtn = document.getElementById("copy-ip-btn");
     if (copyBtn) {
       copyBtn.style.display = "block";
       copyBtn.onclick = () => {
-        navigator.clipboard.writeText(data.ip);
+        navigator.clipboard?.writeText(data.ip).catch(() => {});
         const toast = document.getElementById("copy-toast");
         if (toast) {
           toast.style.opacity = "1";
@@ -455,6 +457,7 @@
           echoMap.remove();
           echoMap = null;
           mapCoords = null;
+          document.removeEventListener("themeChanged", handleThemeChange);
         } catch (err) {}
         document.removeEventListener("spa-content-loaded", handlePageCleanup);
       }

@@ -333,15 +333,23 @@
     }
   }
 
-  const cleanUp = () => {
-    if (!document.getElementById("snake-canvas")) {
-      clearTimeout(loopTimeout);
-      isRunning = false;
-      window.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("spa-content-loaded", cleanUp);
-    }
-  };
-  document.addEventListener("spa-content-loaded", cleanUp);
+  function cleanUp() {
+    clearTimeout(loopTimeout);
+    isRunning = false;
+    isPaused = false;
+    window.removeEventListener("keydown", handleKeyDown);
+  }
 
-  document.addEventListener("spa-content-loaded", initEngine);
+  function handleRoute() {
+    if (document.getElementById("snake-canvas")) {
+      initEngine();
+    } else {
+      cleanUp();
+    }
+  }
+
+  document.addEventListener("spa-content-loaded", handleRoute);
+  document.addEventListener("themeChanged", () => {
+    if (document.getElementById("snake-canvas")) render();
+  });
 })();

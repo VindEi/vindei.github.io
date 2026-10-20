@@ -186,13 +186,44 @@
 }
 
 .history-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: var(--bg);
   border: 1px solid var(--border-color);
-  padding: 4px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
   font-family: monospace;
   font-size: 0.85rem;
   color: var(--text);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.history-chip.is-interactive {
+  cursor: pointer;
+}
+
+.history-chip.is-interactive:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-hover);
+}
+
+.history-chip .chip-val {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.history-chip .chip-range {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  background: var(--surface);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border-color);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .history-empty {

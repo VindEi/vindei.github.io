@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sq.className = `git-sq ${level}`;
       sq.setAttribute(
         "title",
-        `${count} contribution${count !== 1 ? "s" : ""} on day ${index + 1}`,
+        `${count} event${count !== 1 ? "s" : ""} (${index === 19 ? "today" : index === 18 ? "yesterday" : `${19 - index} days ago`})`,
       );
     });
   };

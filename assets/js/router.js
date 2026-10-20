@@ -14,6 +14,7 @@
     "/tools/data": "/pages/tools/data.html",
     "/hub": "/pages/hub.html",
     "/hub/snake": "/pages/hub/snake.html",
+    "/snake": "/pages/hub/snake.html",
     "/hub/rng": "/pages/hub/rng.html",
     "/rng": "/pages/hub/rng.html",
   };
@@ -27,6 +28,7 @@
     "/tools/data": "VindE | Data Encrypt",
     "/hub": "VindE | Hub",
     "/hub/snake": "VindE | Snake",
+    "/snake": "VindE | Snake",
     "/hub/rng": "VindE | RNG",
     "/rng": "VindE | RNG",
   };
@@ -46,6 +48,7 @@
     "/tools/data": ["/assets/js/tools/data.js"],
     "/hub": [],
     "/hub/snake": ["/assets/js/hub/snake.js"],
+    "/snake": ["/assets/js/hub/snake.js"],
     "/hub/rng": ["/assets/js/hub/rng.js"],
     "/rng": ["/assets/js/hub/rng.js"],
   };
@@ -65,6 +68,7 @@
     "/tools/data": ["/assets/css/tools/data.css"],
     "/hub": ["/assets/css/tools/tools.css"],
     "/hub/snake": ["/assets/css/hub/snake.css"],
+    "/snake": ["/assets/css/hub/snake.css"],
     "/hub/rng": ["/assets/css/hub/rng.css"],
     "/rng": ["/assets/css/hub/rng.css"],
   };
@@ -178,7 +182,7 @@
       document.querySelector(".tools-btn").classList.add("active");
     }
     if (
-      (path === "/hub" || path.startsWith("/hub/") || path === "/rng") &&
+      (path === "/hub" || path.startsWith("/hub/") || path === "/rng" || path === "/snake") &&
       document.querySelector(".hub-btn")
     ) {
       document.querySelector(".hub-btn").classList.add("active");
@@ -243,11 +247,11 @@
 
       // Visibility toggles
       if (is404 || cleanPath === "/") {
-        if (header) header.style.display = is404 ? "none" : "";
-        if (footer) footer.style.display = "none";
+        if (header) header.classList.toggle("is-hidden", is404);
+        if (footer) footer.classList.add("is-hidden");
       } else {
-        if (header) header.style.display = "";
-        if (footer) footer.style.display = "";
+        if (header) header.classList.remove("is-hidden");
+        if (footer) footer.classList.remove("is-hidden");
       }
 
       // Theme persistence
@@ -267,6 +271,7 @@
 
       // Inject HTML content
       main.innerHTML = content;
+      window.scrollTo(0, 0);
 
       // Load required scripts
       for (const src of scriptsToLoad) {

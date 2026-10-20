@@ -2,7 +2,7 @@
   <div class="echo-content-wrap">
     <div class="echo-header-row">
       <div class="echo-title-group">
-        <p class="accent-tag">SYSTEM ECHO</p>
+        <p class="accent-tag">NETWORK &amp; DEVICE INFO</p>
         <span id="echo-latency" class="latency-tag"></span>
       </div>
       <button
@@ -17,7 +17,7 @@
 
     <div>
       <div class="ip-display-row">
-        <h1 id="user-ip"><span class="ip-loading">INITIALIZING...</span></h1>
+        <h1 id="user-ip"><span class="ip-loading">Loading...</span></h1>
         <img id="user-flag" src="" alt="Country Flag" />
         <div class="ip-actions">
           <button
@@ -28,16 +28,16 @@
           >
             <i class="fas fa-copy"></i>
           </button>
-          <div id="copy-toast" class="toast-msg">[ IP_COPIED ]</div>
+          <div id="copy-toast" class="toast-msg">IP copied</div>
         </div>
       </div>
-      <p id="user-isp">Detecting network telemetry...</p>
+      <p id="user-isp">Looking up network details...</p>
     </div>
 
     <div class="echo-main-grid">
       <div class="echo-columns">
         <div>
-          <h2 class="section-title">[ NETWORK ]</h2>
+          <h2 class="section-title">Network</h2>
           <div class="echo-card-grid">
             <div class="echo-feature-card">
               <i class="fas fa-map-marker-alt"></i>
@@ -63,13 +63,13 @@
         </div>
 
         <div>
-          <h2 class="section-title">[ HARDWARE ]</h2>
+          <h2 class="section-title">Hardware</h2>
           <div class="echo-card-grid">
             <div class="echo-feature-card">
               <i class="fas fa-microchip"></i>
               <h3>
                 Processing
-                <a href="#kb" class="kb-link">(?)</a>
+                <a href="#kb" class="kb-link" title="Why is this capped?">(?)</a>
               </h3>
               <p id="user-hw">---</p>
             </div>
@@ -80,7 +80,7 @@
             </div>
             <div class="echo-feature-card">
               <i class="fas fa-expand"></i>
-              <h3>Native Res</h3>
+              <h3>Resolution</h3>
               <p id="user-res">---</p>
             </div>
             <div class="echo-feature-card">
@@ -102,7 +102,7 @@
         </div>
 
         <div>
-          <h2 class="section-title">[ BROWSER ]</h2>
+          <h2 class="section-title">Browser</h2>
           <div class="echo-card-grid">
             <div class="echo-feature-card">
               <i class="fas fa-desktop"></i>
@@ -116,7 +116,7 @@
             </div>
             <div class="echo-feature-card">
               <i class="fas fa-robot"></i>
-              <h3>Bot Status</h3>
+              <h3>Automation</h3>
               <p id="user-bot">---</p>
             </div>
             <div class="echo-feature-card">
@@ -133,7 +133,7 @@
               <i class="fas fa-memory"></i>
               <h3>
                 Memory
-                <a href="#kb" class="kb-link">(?)</a>
+                <a href="#kb" class="kb-link" title="Why is this capped?">(?)</a>
               </h3>
               <p id="user-ram">---</p>
             </div>
@@ -141,18 +141,18 @@
         </div>
 
         <details class="ua-details">
-          <summary class="ua-summary">VIEW_RAW_USER_AGENT</summary>
+          <summary class="ua-summary">User-Agent String</summary>
           <code id="user-ua" class="ua-code">---</code>
         </details>
       </div>
 
       <div class="map-column">
-        <h2 class="section-title">[ GEOLOCATION ]</h2>
+        <h2 class="section-title">Location</h2>
         <div id="map"></div>
 
         <div class="network-log-container">
           <details id="net-log">
-            <summary id="api-source-summary">PROBING...</summary>
+            <summary id="api-source-summary">API Sources</summary>
             <div id="api-log-list" class="log-list"></div>
           </details>
         </div>
@@ -175,32 +175,27 @@
     </div>
 
     <div id="kb" class="kb-section">
-      <h2 class="kb-heading">[ KNOWLEDGE_BASE & DISCLAIMERS ]</h2>
+      <h2 class="kb-heading">Notes &amp; FAQ</h2>
       <p class="kb-notice">
-        NOTICE: SOME DATA MAY BE MASKED BY BROWSER SHIELDS OR ISP ROUTING.
+        Note: Some values may be masked by browser privacy features, ad blockers, or VPNs.
       </p>
       <div class="kb-grid">
         <div class="kb-item">
-          <h4>Why is hardware data capped?</h4>
+          <h4>Hardware data limits</h4>
           <p>
-            Modern browsers use "Anti-Fingerprinting" to protect your privacy.
-            High-end hardware is often reported as standard values (e.g., 8GB
-            RAM).
+            Modern browsers cap reported CPU cores and memory (typically at 8GB) to protect against device fingerprinting.
           </p>
         </div>
         <div class="kb-item">
-          <h4>How accurate is geolocation?</h4>
+          <h4>Geolocation accuracy</h4>
           <p>
-            IP-based geolocation identifies the location of your ISP's
-            datacenter. Behind CGNAT or VPNs, the reported city may differ from
-            physical position.
+            IP-based geolocation resolves to your ISP's regional routing center or VPN gateway, which may differ from your physical position.
           </p>
         </div>
         <div class="kb-item">
-          <h4>Adblock Detection</h4>
+          <h4>Adblock detection</h4>
           <p>
-            Strict browsers handle adblocking natively. We probe common ad
-            domains; if the request fails, filtering is assumed active.
+            We test whether standard ad banner styles are hidden by client-side filters or privacy extensions.
           </p>
         </div>
       </div>

@@ -437,7 +437,8 @@ body.light-theme .dashboard-telemetry {
   animation: pulseGreen 2s infinite;
 }
 
-.uptime-percentage {
+.uptime-percentage,
+.github-handle {
   font-family: monospace;
   font-size: 0.7rem;
   font-weight: 700;

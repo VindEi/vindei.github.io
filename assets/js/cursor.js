@@ -117,6 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
     targetRect = null;
     cursor.classList.remove("is-locked");
     cursorInner.classList.remove("is-plus");
+    cursor.style.opacity = "1";
+    cursorInner.style.opacity = "1";
     targetScale = 1;
     startLoop();
   });
